@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "lessons_count_table")
-data class SleepNight(
+data class Lesson(
     @PrimaryKey(autoGenerate = true)
     var lessonId: Long = 0L,
 

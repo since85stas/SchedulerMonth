@@ -28,13 +28,13 @@ import androidx.room.RoomDatabase
  * This pattern is pretty much the same for any database,
  * so you can reuse it.
  */
-@Database(entities = [SleepNight::class], version = 1, exportSchema = false)
+@Database(entities = [MainData::class, Section::class, Lesson::class], version = 1, exportSchema = false)
 abstract class LessonsDatabase : RoomDatabase() {
 
     /**
      * Connects the database to the DAO.
      */
-//    abstract val sleepDatabaseDao: SleepDatabaseDao
+    abstract val lessonsDatabaseDao: LessonsDatabaseDao
 
     /**
      * Define a companion object, this allows us to add functions on the SleepDatabase class.
@@ -85,7 +85,7 @@ abstract class LessonsDatabase : RoomDatabase() {
                     instance = Room.databaseBuilder(
                             context.applicationContext,
                             RoomDatabase::class.java,
-                            "sleep_history_database"
+                            "lessons_history_database"
                     )
                             // Wipes and rebuilds instead of migrating if no Migration object.
                             // Migration is not part of this lesson. You can learn more about
