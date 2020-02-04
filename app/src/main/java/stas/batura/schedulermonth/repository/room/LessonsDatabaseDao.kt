@@ -11,7 +11,7 @@ interface LessonsDatabaseDao {
     @Insert fun insertSection(section: Section)
 
     @Query("SELECT * FROM sections_table WHERE sectionId = :key")
-    fun qetSection(key : Long)
+    fun qetSection(key : Long) : Section?
 
     @Query("SELECT * FROM sections_table ORDER BY sectionId")
     fun getSections() : LiveData<List<Section>>

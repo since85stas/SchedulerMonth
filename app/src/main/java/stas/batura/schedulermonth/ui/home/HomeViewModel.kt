@@ -5,9 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import stas.batura.schedulermonth.repository.room.LessonsDatabase
+import stas.batura.schedulermonth.repository.room.LessonsDatabaseDao
 import stas.batura.schedulermonth.repository.room.Section
 
-class HomeViewModel ( val dataSource : LessonsDatabase ,val contex: Application) : ViewModel() {
+class HomeViewModel (val dataSource : LessonsDatabaseDao, val contex: Application) : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
@@ -22,6 +23,6 @@ class HomeViewModel ( val dataSource : LessonsDatabase ,val contex: Application)
     }
 
     fun addSection(section: Section) {
-        dataSource.lessonsDatabaseDao.insertSection(section)
+        dataSource.insertSection(section)
     }
 }
