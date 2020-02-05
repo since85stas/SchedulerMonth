@@ -10,6 +10,12 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
+
+    // Enables data binding.
+    dataBinding {
+        enabled = true
+    }
+
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "stas.batura.schedulermonth"
@@ -35,10 +41,6 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
-    // Enables data binding.
-    dataBinding {
-        enabled = true
-    }
 }
 
 dependencies {
@@ -56,6 +58,11 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    // Support libraries
+    implementation "androidx.appcompat:appcompat:$version_appcompat"
+    implementation "androidx.fragment:fragment:$version_fragment"
+    implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
 
     // Android KTX
 //    implementation "androidx.core:core-ktx:$version_core"

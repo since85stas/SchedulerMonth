@@ -6,14 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import stas.batura.schedulermonth.R
 import stas.batura.schedulermonth.repository.room.LessonsDatabase
-import androidx.databinding.DataBindingUtil
-
-
+import stas.batura.schedulermonth.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
@@ -24,20 +23,18 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val bindings = DataBindingUtil.inflate(inflater, R.layout.fragment_home,container,false)
+        // Get a reference to the binding object and inflate the fragment views.
+        val bindings: FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home,container,false)
+
         val application : Application = requireNotNull(this.activity).application
-
         val database = LessonsDatabase.getInstance(application).lessonsDatabaseDao
-
         val viewModelFactory = HomeViewModelFactory( database, application)
 
+        // get a view model
+        val homeViewModel = ViewModelProviders.of(this, viewModelFactory).get( HomeViewModel :: class.java)
 
-//        homeViewModel =
-//            ViewModelProviders.of(this).get(HomeViewModel::class.java)
-
-         val homeViewModel = ViewModelProviders.of(this, viewModelFactory).get( HomeViewModel :: class.java)
-
-//        val root = inflater.inflate(R.layout.fragment_home, container, false)
+        // связываем переменные в модели и ui
+        bindings.homeViewModel = homeViewModel
 //        val textView: TextView = root.findViewById(R.id.text_home)
 //        homeViewModel.text.observe(this, Observer {
 //            textView.text = it
