@@ -14,7 +14,7 @@ interface LessonsDatabaseDao {
     fun qetSection(key : Long) : Section?
 
     @Query("SELECT * FROM sections_table ORDER BY sectionId")
-    fun getSections() : LiveData<List<Section>>
+    fun getSections() : List<Section>
 
 
 }

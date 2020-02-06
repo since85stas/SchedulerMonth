@@ -1,12 +1,13 @@
 package stas.batura.schedulermonth.repository.room
 
+import androidx.core.util.rangeTo
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "sections_table")
 data class Section(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = true )
     var sectionId: Long = 0L,
 
     @ColumnInfo(name = "section_name")

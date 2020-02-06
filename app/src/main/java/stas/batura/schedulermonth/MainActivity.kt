@@ -13,10 +13,35 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import androidx.lifecycle.ViewModel
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.*
+import stas.batura.schedulermonth.repository.room.LessonsDatabase
+import stas.batura.schedulermonth.repository.room.LessonsDatabaseDao
+import stas.batura.schedulermonth.repository.room.Section
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+
+    lateinit var dataSource : LessonsDatabaseDao
+
+    /**
+     * viewModelJob allows us to cancel all coroutines started by this ViewModel.
+     */
+    private var viewJob = Job()
+
+    /**
+     * A [CoroutineScope] keeps track of all coroutines started by this ViewModel.
+     *
+     * Because we pass it [viewModelJob], any coroutine started in this uiScope can be cancelled
+     * by calling `viewModelJob.cancel()`
+     *
+     * By default, all coroutines started in uiScope will launch in [Dispatchers.Main] which is
+     * the main thread on Android. This is a sensible default because most coroutines started by
+     * a [ViewModel] update the UI after performing some processing.
+     */
+    private val viewScope = CoroutineScope(Dispatchers.Main + viewJob)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +67,17 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        dataSource = LessonsDatabase.getInstance(application).lessonsDatabaseDao
+
+        // получаем список секций для отображения в navView
+        viewScope.launch {
+            val sec = getSectionsFromDb()
+            print("act test")
+
+            // создаем меню по загруженным данным
+            createSectionsInMenu(sec)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -53,5 +89,26 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    /**
+     * создает отображение списка секций в меню
+     */
+    private fun createSectionsInMenu(sections : List<Section>) {
+        var menu = nav_view.menu
+        for (section in sections) {
+            menu.add(R.id.mainGroup,section.sectionId.toInt(),2, section.sectionName)
+        }
+
+    }
+
+    /**
+     *  получает список всех секций из базы данных
+     */
+    private suspend fun getSectionsFromDb() : List<Section> {
+        return withContext(Dispatchers.IO) {
+            var sections = dataSource.getSections()
+            sections
+        }
     }
 }
