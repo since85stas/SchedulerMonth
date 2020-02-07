@@ -10,10 +10,10 @@ interface LessonsDatabaseDao {
 
     @Insert fun insertSection(section: Section)
 
-    @Query("SELECT * FROM sections_table WHERE sectionId = :key")
+    @Query("SELECT * FROM sections_table WHERE Id = :key")
     fun qetSection(key : Long) : Section?
 
-    @Query("SELECT * FROM sections_table ORDER BY sectionId")
+    @Query("SELECT * FROM sections_table ORDER BY Id")
     fun getSections() : List<Section>
 
 

@@ -1,6 +1,7 @@
 package stas.batura.schedulermonth
 
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import androidx.navigation.findNavController
@@ -13,6 +14,7 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import android.view.MenuItem
 import androidx.lifecycle.ViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
@@ -96,9 +98,29 @@ class MainActivity : AppCompatActivity() {
      */
     private fun createSectionsInMenu(sections : List<Section>) {
         var menu = nav_view.menu
+        var listId: MutableList<Int> = ArrayList()
+
         for (section in sections) {
             menu.add(R.id.mainGroup,section.sectionId.toInt(),2, section.sectionName)
+            listId.add(section.sectionId.toInt())
         }
+
+        // устанавливаем слушатель на нажатие клавиш
+        nav_view.setNavigationItemSelectedListener( (NavigationView.OnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.nav_home -> {
+                    Log.d("main", "Home")
+                    true
+                }
+                in listId ->  {
+                    Log.d("main", "frag$listId")
+
+                   true
+                }
+                else -> false
+            }
+        }) )
+
 
     }
 
@@ -111,4 +133,6 @@ class MainActivity : AppCompatActivity() {
             sections
         }
     }
+
+
 }

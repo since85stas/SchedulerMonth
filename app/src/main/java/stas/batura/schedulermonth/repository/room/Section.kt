@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "sections_table")
 data class Section(
     @PrimaryKey(autoGenerate = true )
+    @ColumnInfo(name = "Id")
     var sectionId: Long = 0L,
 
     @ColumnInfo(name = "section_name")

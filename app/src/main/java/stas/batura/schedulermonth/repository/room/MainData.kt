@@ -2,9 +2,14 @@ package stas.batura.schedulermonth.repository.room
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "main_table")
+@Entity(tableName = "main_table", foreignKeys = [ForeignKey(entity = Section::class
+    , parentColumns = ["Id"]
+    , childColumns = ["current_section_id"]
+    , onDelete = ForeignKey.CASCADE
+)])
 data class MainData(
     @PrimaryKey(autoGenerate = true)
     var mainId: Long = 0L,
