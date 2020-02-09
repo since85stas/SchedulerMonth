@@ -110,18 +110,18 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.nav_home -> {
                     Log.d("main", "Home")
+                    drawer_layout.closeDrawers()
                     true
                 }
                 in listId ->  {
                     Log.d("main", "frag$listId")
-
+                    val result = setCurrentSection(it.itemId)
+                    drawer_layout.closeDrawers()
                    true
                 }
                 else -> false
             }
         }) )
-
-
     }
 
     /**
@@ -134,5 +134,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+    private fun addNewPeriodInDb() {
+
+    }
+
+    /**
+     * Выбранный месяц делаем записанным по умолчанию
+     */
+    private fun setCurrentSection(sectionId:Int) : Long {
+        return dataSource.setCurrentSection(sectionId)
+    }
 
 }

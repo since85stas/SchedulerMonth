@@ -19,7 +19,7 @@ data class Lesson(
     val lessonDate: Long = System.currentTimeMillis(),
 
     @ColumnInfo(name = "lesson_is_complete")
-    var endTimeMilli: Long = 0,
+    var lessonIsComplete: Int = 0,
 
     @ColumnInfo(name = "month_id")
     var monthId: Int = -1,
