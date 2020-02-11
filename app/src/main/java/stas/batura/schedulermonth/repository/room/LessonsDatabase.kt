@@ -36,6 +36,8 @@ abstract class LessonsDatabase : RoomDatabase() {
      */
     abstract val lessonsDatabaseDao: LessonsDatabaseDao
 
+
+
     /**
      * Define a companion object, this allows us to add functions on the SleepDatabase class.
      *

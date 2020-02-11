@@ -18,9 +18,9 @@ import android.view.MenuItem
 import androidx.lifecycle.ViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
-import stas.batura.schedulermonth.repository.room.LessonsDatabase
-import stas.batura.schedulermonth.repository.room.LessonsDatabaseDao
-import stas.batura.schedulermonth.repository.room.Section
+import stas.batura.schedulermonth.repository.room.*
+
+private val CURR_ID = 44L
 
 class MainActivity : AppCompatActivity() {
 
@@ -142,8 +142,9 @@ class MainActivity : AppCompatActivity() {
     /**
      * Выбранный месяц делаем записанным по умолчанию
      */
-    private fun setCurrentSection(sectionId:Int) : Long {
-        return dataSource.setCurrentSection(sectionId)
+    private fun setCurrentSection(sectionId:Int) {
+        val mainData = MainData(CURR_ID,sectionId)
+        dataSource.insertMainData(mainData)
     }
 
 }

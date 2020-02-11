@@ -6,6 +6,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
+
+
 @Dao
 interface LessonsDatabaseDao {
 
@@ -17,7 +19,12 @@ interface LessonsDatabaseDao {
     @Query("SELECT * FROM sections_table ORDER BY Id")
     fun getSections() : List<Section>
 
+
+
+    /**
+     * записываем номер выбранной секции
+     */
     @Insert (onConflict = OnConflictStrategy.REPLACE)
-    fun setCurrentSection(sectionId:Int) : Long
+    fun insertMainData(mainData: MainData)
 
 }
