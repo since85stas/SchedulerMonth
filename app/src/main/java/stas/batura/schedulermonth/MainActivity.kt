@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import stas.batura.schedulermonth.repository.room.*
 
-private val CURR_ID = 44L
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -115,7 +115,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 in listId ->  {
                     Log.d("main", "frag$listId")
-                    val result = setCurrentSection(it.itemId)
+                    viewScope.launch {
+                        val result = setCurrentSection(it.itemId)
+                    }
                     drawer_layout.closeDrawers()
                    true
                 }
@@ -142,9 +144,10 @@ class MainActivity : AppCompatActivity() {
     /**
      * Выбранный месяц делаем записанным по умолчанию
      */
-    private fun setCurrentSection(sectionId:Int) {
-        val mainData = MainData(CURR_ID,sectionId)
-        dataSource.insertMainData(mainData)
+    private suspend fun setCurrentSection(sectionId:Int) {
+        return withContext(Dispatchers.IO) {
+//        val mainData = MainData(CURR_ID, sectionId)
+        dataSource.insertMainData(sectionId)}
     }
 
 }

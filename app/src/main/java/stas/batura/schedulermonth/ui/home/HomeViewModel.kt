@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
 import stas.batura.schedulermonth.repository.room.LessonsDatabase
 import stas.batura.schedulermonth.repository.room.LessonsDatabaseDao
+import stas.batura.schedulermonth.repository.room.MainData
 import stas.batura.schedulermonth.repository.room.Section
 import kotlin.text.Typography.section
 
@@ -16,6 +17,10 @@ class HomeViewModel (val dataSource : LessonsDatabaseDao, val contex: Applicatio
         value = "This is home Fragment"
     }
     val text: LiveData<String> = _text
+
+    private var _currSectionMainData = MutableLiveData<String>()
+    val currSectionMainData: LiveData<String>
+        get() = _currSectionMainData
 
     /**
      * viewModelJob allows us to cancel all coroutines started by this ViewModel.
@@ -40,6 +45,7 @@ class HomeViewModel (val dataSource : LessonsDatabaseDao, val contex: Applicatio
     init {
         uiScope.launch {
             val testSection = getSectionFromDb(1)
+            _currSectionMainData.value = getCurrentSectionFromDb()
             print("test")
         }
     }
@@ -73,5 +79,13 @@ class HomeViewModel (val dataSource : LessonsDatabaseDao, val contex: Applicatio
         }
     }
 
+    /**
+     * получаем информацию о выбранной по умолчанию секции
+     */
+    private suspend fun getCurrentSectionFromDb() : String {
+        return withContext(Dispatchers.IO) {
+                dataSource.getCurrentSection(44L).currentSectionId.toString()
+            }
+    }
 
 }

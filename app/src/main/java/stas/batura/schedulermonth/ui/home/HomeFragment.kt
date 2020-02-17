@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import kotlinx.android.synthetic.main.fragment_home.*
 import stas.batura.schedulermonth.R
 import stas.batura.schedulermonth.repository.room.LessonsDatabase
 import stas.batura.schedulermonth.databinding.FragmentHomeBinding
@@ -24,21 +25,23 @@ class HomeFragment : Fragment() {
     ): View? {
 
         // Get a reference to the binding object and inflate the fragment views.
-        val bindings: FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home,container,false)
+        val bindings: FragmentHomeBinding = DataBindingUtil
+            .inflate(inflater, R.layout.fragment_home,container,false)
 
         val application : Application = requireNotNull(this.activity).application
         val database = LessonsDatabase.getInstance(application).lessonsDatabaseDao
         val viewModelFactory = HomeViewModelFactory( database, application)
 
         // get a view model
-        val homeViewModel = ViewModelProviders.of(this, viewModelFactory).get( HomeViewModel :: class.java)
+        val homeViewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get( HomeViewModel :: class.java)
 
         // связываем переменные в модели и ui
         bindings.homeViewModel = homeViewModel
-//        val textView: TextView = root.findViewById(R.id.text_home)
-//        homeViewModel.text.observe(this, Observer {
-//            textView.text = it
-//        })
+
+        homeViewModel.currSectionMainData.observe(viewLifecycleOwner, Observer {
+            text_home.text = it
+        })
 
 
         return bindings.root
