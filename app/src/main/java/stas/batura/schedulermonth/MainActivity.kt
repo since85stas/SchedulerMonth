@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_main.*
@@ -76,18 +77,17 @@ class MainActivity : AppCompatActivity() {
 
         dataSource = LessonsDatabase.getInstance(application).lessonsDatabaseDao
 
-        val factory = HomeViewModelFactory(dataSource,application)
+        val factory = MainActivityViewModelFactory(dataSource,application)
         mainActivityViewModel = ViewModelProviders.of(this,factory)
             .get(MainActivityViewModel::class.java)
 
-        // получаем список секций для отображения в navView
-        viewScope.launch {
-//            val sec = getSectionsFromDb()
-            print("act test")
 
-            // создаем меню по загруженным данным
-//            createSectionsInMenu(sec)
-        }
+        // получаем список секций для отображения в navView
+        mainActivityViewModel.sections.observe(this, Observer {
+            if (it != null ) {
+                createSectionsInMenu(it)
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -123,9 +123,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 in listId ->  {
                     Log.d("main", "frag$listId")
-//                    viewScope.launch {
-//                        val result = setCurrentSection(it.itemId)
-//                    }
+                        val result = mainActivityViewModel.setCurrentSection(it.itemId)
                     drawer_layout.closeDrawers()
                    true
                 }

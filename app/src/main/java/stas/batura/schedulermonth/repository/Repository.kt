@@ -27,16 +27,16 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
 
-//    fun getCurrentSection() : LiveData<MainData>{
-//        uiScope.launch {
-//            val res = getCurrentSection()
-//        }
-//    }
+    fun saveSection(section: Section) {
+        uiScope.launch {
+            saveSectionDb(section)
+        }
+    }
 
     /**
-     *добавля т данные о добавленной секции в базу данных
+     * добавля т данные о добавленной секции в базу данных
      */
-    suspend fun saveSectionInDb(section: Section) {
+    private suspend fun saveSectionDb(section: Section) {
         withContext(Dispatchers.IO) {
             dataSource.insertSection(section)
         }
@@ -52,12 +52,9 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
     /**
      * получаем информацию о секции из базы данных по номеру секции
      */
-    fun getSectionFromDb(key: Long): Section? {
-//        return withContext(Dispatchers.IO) {
+    fun getSection(key: Long): LiveData<Section?> {
         var section = dataSource.qetSection(key)
         return section
-//            section
-//        }
     }
 
 
@@ -72,23 +69,33 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
     /**
      *  получает список всех секций из базы данных
      */
-    private fun getSectionsFromDb(): LiveData<List<Section>> {
+    fun getSections(): LiveData<List<Section>> {
         var sections = dataSource.getSections()
         return sections
-    }
-
-    private fun addNewPeriodInDb() {
-
     }
 
     /**
      * Выбранный секцию делаем записанным по умолчанию
      */
-    private suspend fun setCurrentSection(sectionId: Int) {
+    fun setCurrentSection(sectionId: Int) {
+        uiScope.launch {
+            setCurrentSectionDb(sectionId)
+        }
+    }
+
+    /**
+     * Сохраняем данные о секции в базе данных
+     */
+    private suspend fun setCurrentSectionDb(sectionId: Int) {
         return withContext(Dispatchers.IO) {
             val mainData = MainData(44L, sectionId)
             dataSource.insertMainData(sectionId)
         }
+    }
+
+
+    private fun addNewPeriodInDb() {
+
     }
 }
 
