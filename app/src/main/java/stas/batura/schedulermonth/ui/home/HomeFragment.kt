@@ -39,8 +39,10 @@ class HomeFragment : Fragment() {
         // связываем переменные в модели и ui
         bindings.homeViewModel = homeViewModel
 
+
         homeViewModel.currSectionMainData.observe(viewLifecycleOwner, Observer {
             text_home.text = it
+
         })
 
 
