@@ -16,10 +16,11 @@ import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import stas.batura.schedulermonth.repository.room.*
-
+import stas.batura.schedulermonth.ui.home.HomeViewModelFactory
 
 
 class MainActivity : AppCompatActivity() {
@@ -45,6 +46,8 @@ class MainActivity : AppCompatActivity() {
      */
     private val viewScope = CoroutineScope(Dispatchers.Main + viewJob)
 
+    private lateinit var mainActivityViewModel: MainActivityViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -56,6 +59,7 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
+
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
@@ -72,13 +76,17 @@ class MainActivity : AppCompatActivity() {
 
         dataSource = LessonsDatabase.getInstance(application).lessonsDatabaseDao
 
+        val factory = HomeViewModelFactory(dataSource,application)
+        mainActivityViewModel = ViewModelProviders.of(this,factory)
+            .get(MainActivityViewModel::class.java)
+
         // получаем список секций для отображения в navView
         viewScope.launch {
-            val sec = getSectionsFromDb()
+//            val sec = getSectionsFromDb()
             print("act test")
 
             // создаем меню по загруженным данным
-            createSectionsInMenu(sec)
+//            createSectionsInMenu(sec)
         }
     }
 
@@ -115,9 +123,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 in listId ->  {
                     Log.d("main", "frag$listId")
-                    viewScope.launch {
-                        val result = setCurrentSection(it.itemId)
-                    }
+//                    viewScope.launch {
+//                        val result = setCurrentSection(it.itemId)
+//                    }
                     drawer_layout.closeDrawers()
                    true
                 }
@@ -126,28 +134,6 @@ class MainActivity : AppCompatActivity() {
         }) )
     }
 
-    /**
-     *  получает список всех секций из базы данных
-     */
-    private suspend fun getSectionsFromDb() : List<Section> {
-        return withContext(Dispatchers.IO) {
-            var sections = dataSource.getSections()
-            sections
-        }
-    }
 
-
-    private fun addNewPeriodInDb() {
-
-    }
-
-    /**
-     * Выбранный секцию делаем записанным по умолчанию
-     */
-    private suspend fun setCurrentSection(sectionId:Int) {
-        return withContext(Dispatchers.IO) {
-//        val mainData = MainData(CURR_ID, sectionId)
-        dataSource.insertMainData(sectionId)}
-    }
 
 }

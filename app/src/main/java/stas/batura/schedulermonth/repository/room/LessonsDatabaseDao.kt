@@ -19,7 +19,7 @@ abstract class LessonsDatabaseDao {
     abstract fun qetSection(key: Long): Section?
 
     @Query("SELECT * FROM sections_table ORDER BY Id")
-    abstract fun getSections(): List<Section>
+    abstract fun getSections(): LiveData<List<Section>>
 
     /**
      * записываем номер выбранной секции

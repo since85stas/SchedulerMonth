@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
+import stas.batura.schedulermonth.repository.Repository
 import stas.batura.schedulermonth.repository.room.LessonsDatabase
 import stas.batura.schedulermonth.repository.room.LessonsDatabaseDao
 import stas.batura.schedulermonth.repository.room.MainData
@@ -12,6 +13,8 @@ import stas.batura.schedulermonth.repository.room.Section
 import kotlin.text.Typography.section
 
 class HomeViewModel (val dataSource : LessonsDatabaseDao, val contex: Application) : ViewModel() {
+
+    private var repository: Repository = Repository(dataSource)
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
@@ -43,13 +46,14 @@ class HomeViewModel (val dataSource : LessonsDatabaseDao, val contex: Applicatio
     /**
      * создаем LiveData для текущей MainData
      */
-    val _currSectionMainData: LiveData<MainData> = getCurrentSectionFromDb()
+    val _currSectionMainData: LiveData<MainData> = repository.getCurrentSection()
 
     /**
      * инициализируем вьюмодель
      */
     init {
         print("init")
+//        repository = Repository(dataSource)
     }
 
     /**
@@ -58,43 +62,43 @@ class HomeViewModel (val dataSource : LessonsDatabaseDao, val contex: Applicatio
     fun addSection() {
         uiScope.launch {
             val section = Section()
-            saveSectionInDb(section)
+            repository.saveSectionInDb(section)
         }
     }
 
-    /**
-     *добавля т данные о добавленной секции в базу данных
-     */
-    private suspend fun saveSectionInDb(section: Section) {
-        withContext(Dispatchers.IO) {
-            dataSource.insertSection(section)
-        }
-    }
-
-
-//    private fun updateMainData() {
-//        uiScope.launch {
-//            getCurrentSectionFromDb()
+//    /**
+//     *добавля т данные о добавленной секции в базу данных
+//     */
+//    private suspend fun saveSectionInDb(section: Section) {
+//        withContext(Dispatchers.IO) {
+//            dataSource.insertSection(section)
 //        }
 //    }
-
-    /**
-     * получаем информацию о секции из базы данных по номеру секции
-     */
-    private suspend fun getSectionFromDb(key:Long) : Section? {
-        return withContext(Dispatchers.IO) {
-            var section = dataSource.qetSection(key)
-            section
-        }
-    }
-
-
-    /**
-     * получаем информацию о выбранной по умолчанию секции
-     */
-    private fun getCurrentSectionFromDb() : LiveData<MainData> {
-        var res = dataSource.getCurrentSection(44L)
-        return res
-    }
+//
+//
+////    private fun updateMainData() {
+////        uiScope.launch {
+////            getCurrentSectionFromDb()
+////        }
+////    }
+//
+//    /**
+//     * получаем информацию о секции из базы данных по номеру секции
+//     */
+//    private suspend fun getSectionFromDb(key:Long) : Section? {
+//        return withContext(Dispatchers.IO) {
+//            var section = dataSource.qetSection(key)
+//            section
+//        }
+//    }
+//
+//
+//    /**
+//     * получаем информацию о выбранной по умолчанию секции
+//     */
+//    private fun getCurrentSectionFromDb() : LiveData<MainData> {
+//        var res = dataSource.getCurrentSection(44L)
+//        return res
+//    }
 
 }

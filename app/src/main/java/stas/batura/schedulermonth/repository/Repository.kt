@@ -5,8 +5,9 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
 import stas.batura.schedulermonth.repository.room.LessonsDatabaseDao
 import stas.batura.schedulermonth.repository.room.MainData
+import stas.batura.schedulermonth.repository.room.Section
 
-class Repository (private val dataSource: LessonsDatabaseDao)  {
+class Repository(private val dataSource: LessonsDatabaseDao) {
 
     /**
      * viewModelJob allows us to cancel all coroutines started by this ViewModel.
@@ -33,12 +34,62 @@ class Repository (private val dataSource: LessonsDatabaseDao)  {
 //    }
 
     /**
-     * получаем информацию о выбранной по умолчанию секции
+     *добавля т данные о добавленной секции в базу данных
      */
-    private fun getCurrentSectionFromDb() : LiveData<MainData> {
+    suspend fun saveSectionInDb(section: Section) {
+        withContext(Dispatchers.IO) {
+            dataSource.insertSection(section)
+        }
+    }
+
+
+//    private fun updateMainData() {
+//        uiScope.launch {
+//            getCurrentSectionFromDb()
+//        }
+//    }
+
+    /**
+     * получаем информацию о секции из базы данных по номеру секции
+     */
+    fun getSectionFromDb(key: Long): Section? {
 //        return withContext(Dispatchers.IO) {
-            var res = dataSource.getCurrentSection(44L)
-            return res
+        var section = dataSource.qetSection(key)
+        return section
+//            section
 //        }
     }
+
+
+    /**
+     * получаем информацию о выбранной по умолчанию секции
+     */
+    fun getCurrentSection(): LiveData<MainData> {
+        var res = dataSource.getCurrentSection(44L)
+        return res
+    }
+
+    /**
+     *  получает список всех секций из базы данных
+     */
+    private fun getSectionsFromDb(): LiveData<List<Section>> {
+        var sections = dataSource.getSections()
+        return sections
+    }
+
+    private fun addNewPeriodInDb() {
+
+    }
+
+    /**
+     * Выбранный секцию делаем записанным по умолчанию
+     */
+    private suspend fun setCurrentSection(sectionId: Int) {
+        return withContext(Dispatchers.IO) {
+            val mainData = MainData(44L, sectionId)
+            dataSource.insertMainData(sectionId)
+        }
+    }
 }
+
+
