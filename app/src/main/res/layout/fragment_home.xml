@@ -10,25 +10,29 @@
             type="stas.batura.schedulermonth.ui.home.HomeViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/text_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
             android:textAlignment="center"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="@{homeViewModel.currSectionMainData}"
-
+            android:text="add section"
             android:onClick="@{() -> homeViewModel.addSection()}"
             />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/text_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="no data"
+            />
+    </LinearLayout>
 </layout>

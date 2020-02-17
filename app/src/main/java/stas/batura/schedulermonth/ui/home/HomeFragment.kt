@@ -17,6 +17,7 @@ import stas.batura.schedulermonth.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
+    lateinit var homeViewModel: HomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,15 +34,17 @@ class HomeFragment : Fragment() {
         val viewModelFactory = HomeViewModelFactory( database, application)
 
         // get a view model
-        val homeViewModel = ViewModelProviders.of(this, viewModelFactory)
+        homeViewModel = ViewModelProviders.of(this, viewModelFactory)
             .get( HomeViewModel :: class.java)
 
         // связываем переменные в модели и ui
         bindings.homeViewModel = homeViewModel
 
 
-        homeViewModel.currSectionMainData.observe(viewLifecycleOwner, Observer {
-            text_home.text = it
+        homeViewModel._currSectionMainData.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                text_test.text = it.currentSectionId.toString()
+            }
 
         })
 

@@ -18,9 +18,10 @@ class HomeViewModel (val dataSource : LessonsDatabaseDao, val contex: Applicatio
     }
     val text: LiveData<String> = _text
 
-    private var _currSectionMainData = MutableLiveData<String>()
-    val currSectionMainData: LiveData<String>
-        get() = _currSectionMainData
+
+//    val currSectionMainData: LiveData<MainData>
+//        get() = _currSectionMainData
+//    val currSectionMainData: LiveData<MainData>
 
     /**
      * viewModelJob allows us to cancel all coroutines started by this ViewModel.
@@ -40,14 +41,15 @@ class HomeViewModel (val dataSource : LessonsDatabaseDao, val contex: Applicatio
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     /**
+     * создаем LiveData для текущей MainData
+     */
+    val _currSectionMainData: LiveData<MainData> = getCurrentSectionFromDb()
+
+    /**
      * инициализируем вьюмодель
      */
     init {
-        uiScope.launch {
-            val testSection = getSectionFromDb(1)
-            _currSectionMainData.value = getCurrentSectionFromDb()
-            print("test")
-        }
+        print("init")
     }
 
     /**
@@ -69,6 +71,13 @@ class HomeViewModel (val dataSource : LessonsDatabaseDao, val contex: Applicatio
         }
     }
 
+
+//    private fun updateMainData() {
+//        uiScope.launch {
+//            getCurrentSectionFromDb()
+//        }
+//    }
+
     /**
      * получаем информацию о секции из базы данных по номеру секции
      */
@@ -79,13 +88,13 @@ class HomeViewModel (val dataSource : LessonsDatabaseDao, val contex: Applicatio
         }
     }
 
+
     /**
      * получаем информацию о выбранной по умолчанию секции
      */
-    private suspend fun getCurrentSectionFromDb() : String {
-        return withContext(Dispatchers.IO) {
-                dataSource.getCurrentSection(44L).currentSectionId.toString()
-            }
+    private fun getCurrentSectionFromDb() : LiveData<MainData> {
+        var res = dataSource.getCurrentSection(44L)
+        return res
     }
 
 }

@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Выбранный месяц делаем записанным по умолчанию
+     * Выбранный секцию делаем записанным по умолчанию
      */
     private suspend fun setCurrentSection(sectionId:Int) {
         return withContext(Dispatchers.IO) {
