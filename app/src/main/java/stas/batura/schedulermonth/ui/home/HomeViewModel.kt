@@ -60,10 +60,8 @@ class HomeViewModel (val dataSource : LessonsDatabaseDao, val contex: Applicatio
      *вызываетс для добавления новой секции
      */
     fun addSection() {
-        uiScope.launch {
             val section = Section()
-            repository.saveSectionInDb(section)
-        }
+            repository.saveSection(section)
     }
 
 //    /**

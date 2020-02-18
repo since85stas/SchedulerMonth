@@ -61,19 +61,7 @@ class MainActivity : AppCompatActivity() {
                 .setAction("Action", null).show()
         }
 
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        val navView: NavigationView = findViewById(R.id.nav_view)
-        val navController = findNavController(R.id.nav_host_fragment)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send
-            ), drawerLayout
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+        createBasicNavView()
 
         dataSource = LessonsDatabase.getInstance(application).lessonsDatabaseDao
 
@@ -88,6 +76,22 @@ class MainActivity : AppCompatActivity() {
                 createSectionsInMenu(it)
             }
         })
+    }
+
+    private fun createBasicNavView() {
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        val navView: NavigationView = findViewById(R.id.nav_view)
+        val navController = findNavController(R.id.nav_host_fragment)
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
+                R.id.nav_tools, R.id.nav_share, R.id.nav_send
+            ), drawerLayout
+        )
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        navView.setupWithNavController(navController)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -108,8 +112,10 @@ class MainActivity : AppCompatActivity() {
         var menu = nav_view.menu
         var listId: MutableList<Int> = ArrayList()
 
+        var count : Int = 0
         for (section in sections) {
-            menu.add(R.id.mainGroup,section.sectionId.toInt(),2, section.sectionName)
+            menu.add(R.id.mainGroup,section.sectionId.toInt(),2, section.sectionName + count  )
+            count++
             listId.add(section.sectionId.toInt())
         }
 
@@ -130,6 +136,7 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }) )
+
     }
 
 

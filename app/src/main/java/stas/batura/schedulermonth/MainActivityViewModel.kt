@@ -16,4 +16,6 @@ class MainActivityViewModel (val dataSource : LessonsDatabaseDao, val contex: Ap
     fun setCurrentSection(sectionId: Int) {
         repository.setCurrentSection(sectionId)
     }
+
+
 }
