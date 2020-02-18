@@ -1,7 +1,6 @@
-package stas.batura.schedulermonth.ui.dialogs
+package stas.batura.schedulermonth.ui.create
 
 import android.app.AlertDialog
-import android.app.Application
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
@@ -10,7 +9,7 @@ import stas.batura.schedulermonth.repository.Repository
 import stas.batura.schedulermonth.repository.room.LessonsDatabase
 import stas.batura.schedulermonth.repository.room.LessonsDatabaseDao
 
-class CreateSectionDialog () : DialogFragment () {
+class CreateSectionFragment () : DialogFragment () {
 
     lateinit var repository : Repository
 

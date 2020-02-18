@@ -9,11 +9,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_home.*
 import stas.batura.schedulermonth.R
 import stas.batura.schedulermonth.repository.room.LessonsDatabase
 import stas.batura.schedulermonth.databinding.FragmentHomeBinding
-import stas.batura.schedulermonth.ui.dialogs.CreateSectionDialog
 
 class HomeFragment : Fragment() {
 
@@ -50,10 +50,9 @@ class HomeFragment : Fragment() {
         // наблюдаем за создание новой секции
         homeViewModel.openSectionCreateDialog.observe(viewLifecycleOwner, Observer {
             if (it) {
-                val dialog : CreateSectionDialog = CreateSectionDialog()
+                this.findNavController().navigate(HomeFragmentDirections.openCreate())
             }
         })
-
 
         return bindings.root
     }

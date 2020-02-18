@@ -9,7 +9,17 @@
         android:id="@+id/nav_home"
         android:name="stas.batura.schedulermonth.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/open_create"
+            app:destination="@id/nav_create_section" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_create_section"
+        android:name="stas.batura.schedulermonth.ui.SectionCreateFragmnet"
+        android:label="CretaeSection"
+        tools:layout="@layout/create_section_dialog" />
 
     <fragment
         android:id="@+id/nav_tools"
