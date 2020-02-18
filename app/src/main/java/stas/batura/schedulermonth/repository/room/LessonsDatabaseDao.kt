@@ -18,8 +18,8 @@ abstract class LessonsDatabaseDao {
     @Query("SELECT * FROM sections_table WHERE Id = :key")
     abstract fun qetSection(key: Long): LiveData<Section?>
 
-    @Query(value = "SELECT LAST(Id) FROM sections_table ")
-    abstract fun getLastSection() : LiveData<Section?>
+//    @Query(value = "SELECT LAST(Id) FROM sections_table ")
+//    abstract fun getLastSection() : LiveData<Section?>
 
     @Query("SELECT * FROM sections_table ORDER BY Id")
     abstract fun getSections(): LiveData<List<Section>>

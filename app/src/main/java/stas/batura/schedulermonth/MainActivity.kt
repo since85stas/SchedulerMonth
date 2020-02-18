@@ -26,6 +26,8 @@ import stas.batura.schedulermonth.ui.home.HomeViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
+    val SECT_GROUP_ID : Int = 4477
+
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     lateinit var dataSource : LessonsDatabaseDao
@@ -86,8 +88,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send
+                R.id.nav_home, R.id.nav_tools, R.id.nav_share, R.id.nav_send
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -113,8 +114,12 @@ class MainActivity : AppCompatActivity() {
         var listId: MutableList<Int> = ArrayList()
 
         var count : Int = 0
+
+        // если уже присутствуют секции то их удаляем
+        menu.removeGroup(SECT_GROUP_ID)
+
         for (section in sections) {
-            menu.add(R.id.mainGroup,section.sectionId.toInt(),2, section.sectionName + count  )
+            menu.add(SECT_GROUP_ID,section.sectionId.toInt(),2, section.sectionName + count  )
             count++
             listId.add(section.sectionId.toInt())
         }

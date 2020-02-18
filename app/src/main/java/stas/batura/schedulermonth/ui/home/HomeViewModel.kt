@@ -21,82 +21,42 @@ class HomeViewModel (val dataSource : LessonsDatabaseDao, val contex: Applicatio
     }
     val text: LiveData<String> = _text
 
+    private var _openSectionCreateDialog: MutableLiveData<Boolean> = MutableLiveData(false)
+    val openSectionCreateDialog : LiveData<Boolean>
+        get() = _openSectionCreateDialog
 
 //    val currSectionMainData: LiveData<MainData>
-//        get() = _currSectionMainData
+//        get() = currSectionMainData
 //    val currSectionMainData: LiveData<MainData>
 
-    /**
-     * viewModelJob allows us to cancel all coroutines started by this ViewModel.
-     */
-    private var viewModelJob = Job()
-
-    /**
-     * A [CoroutineScope] keeps track of all coroutines started by this ViewModel.
-     *
-     * Because we pass it [viewModelJob], any coroutine started in this uiScope can be cancelled
-     * by calling `viewModelJob.cancel()`
-     *
-     * By default, all coroutines started in uiScope will launch in [Dispatchers.Main] which is
-     * the main thread on Android. This is a sensible default because most coroutines started by
-     * a [ViewModel] update the UI after performing some processing.
-     */
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     /**
      * создаем LiveData для текущей MainData
      */
-    val _currSectionMainData: LiveData<MainData> = repository.getCurrentSection()
+    val currSectionMainData: LiveData<MainData> = repository.getCurrentSection()
 
     /**
      * инициализируем вьюмодель
      */
     init {
         print("init")
-//        repository = Repository(dataSource)
     }
 
     /**
-     *вызываетс для добавления новой секции
+     *вызываетс для нажатии кнопки новой секции
      */
-    fun addSection() {
-            val section = Section()
-            repository.saveSection(section)
+    fun addSectionButtonclicked() {
+        _openSectionCreateDialog.value = true
+//            val section = Section()
+//            repository.saveSection(section)
     }
 
-//    /**
-//     *добавля т данные о добавленной секции в базу данных
-//     */
-//    private suspend fun saveSectionInDb(section: Section) {
-//        withContext(Dispatchers.IO) {
-//            dataSource.insertSection(section)
-//        }
-//    }
-//
-//
-////    private fun updateMainData() {
-////        uiScope.launch {
-////            getCurrentSectionFromDb()
-////        }
-////    }
-//
-//    /**
-//     * получаем информацию о секции из базы данных по номеру секции
-//     */
-//    private suspend fun getSectionFromDb(key:Long) : Section? {
-//        return withContext(Dispatchers.IO) {
-//            var section = dataSource.qetSection(key)
-//            section
-//        }
-//    }
-//
-//
-//    /**
-//     * получаем информацию о выбранной по умолчанию секции
-//     */
-//    private fun getCurrentSectionFromDb() : LiveData<MainData> {
-//        var res = dataSource.getCurrentSection(44L)
-//        return res
-//    }
+    /**
+     * вызывается после добавления новой секции
+     */
+    fun addSectionComplete() {
+        _openSectionCreateDialog.value = false
+    }
+
 
 }

@@ -57,11 +57,6 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
         return section
     }
 
-    fun getLastSection(): LiveData<Section?> {
-        var section = dataSource.getLastSection()
-        return section
-    }
-
     /**
      * получаем информацию о выбранной по умолчанию секции
      */

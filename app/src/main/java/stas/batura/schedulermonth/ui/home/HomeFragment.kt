@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -14,6 +13,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import stas.batura.schedulermonth.R
 import stas.batura.schedulermonth.repository.room.LessonsDatabase
 import stas.batura.schedulermonth.databinding.FragmentHomeBinding
+import stas.batura.schedulermonth.ui.dialogs.CreateSectionDialog
 
 class HomeFragment : Fragment() {
 
@@ -40,12 +40,18 @@ class HomeFragment : Fragment() {
         // связываем переменные в модели и ui
         bindings.homeViewModel = homeViewModel
 
-
-        homeViewModel._currSectionMainData.observe(viewLifecycleOwner, Observer {
+        // наблюдаем за изменение текущей выбранной секции
+        homeViewModel.currSectionMainData.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 text_test.text = it.currentSectionId.toString()
             }
+        })
 
+        // наблюдаем за создание новой секции
+        homeViewModel.openSectionCreateDialog.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                val dialog : CreateSectionDialog = CreateSectionDialog()
+            }
         })
 
 
