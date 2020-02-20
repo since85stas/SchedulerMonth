@@ -1,18 +1,14 @@
 package stas.batura.schedulermonth.repository.room
 
-import androidx.core.util.rangeTo
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "sections_table")
 data class Section(
-    @PrimaryKey(autoGenerate = true )
-    @ColumnInfo(name = "Id")
-    var sectionId: Long = 0L,
 
     @ColumnInfo(name = "section_name")
-    val sectionName: String = "Default$sectionId",
+    val sectionName: String = "Default name",
 
     @ColumnInfo(name = "section_type")
     var sectionType: Long = 0,
@@ -25,4 +21,9 @@ data class Section(
 
     @ColumnInfo(name = "current_month_id")
     var currentMonthId : Int = 0
-)
+) {
+    @PrimaryKey(autoGenerate = true )
+    @ColumnInfo(name = "Id")
+    var sectionId: Long = 0L
+
+}

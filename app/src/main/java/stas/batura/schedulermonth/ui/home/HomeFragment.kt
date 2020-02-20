@@ -43,6 +43,7 @@ class HomeFragment : Fragment() {
         // наблюдаем за изменение текущей выбранной секции
         homeViewModel.currSectionMainData.observe(viewLifecycleOwner, Observer {
             if (it != null) {
+
                 text_test.text = it.currentSectionId.toString()
             }
         })
@@ -50,6 +51,7 @@ class HomeFragment : Fragment() {
         // наблюдаем за создание новой секции
         homeViewModel.openSectionCreateDialog.observe(viewLifecycleOwner, Observer {
             if (it) {
+                homeViewModel.addSectionComplete()
                 this.findNavController().navigate(HomeFragmentDirections.openCreate())
             }
         })

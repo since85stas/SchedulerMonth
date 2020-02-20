@@ -12,8 +12,6 @@ import androidx.room.PrimaryKey
         , childColumns = ["section_id"]
         , onDelete = CASCADE)])
 data class Lesson(
-    @PrimaryKey(autoGenerate = true)
-    var lessonId: Long = 0L,
 
     @ColumnInfo(name = "lesson_date")
     val lessonDate: Long = System.currentTimeMillis(),
@@ -26,4 +24,9 @@ data class Lesson(
 
     @ColumnInfo(name = "section_id")
     var sectionId : Int = -1
-)
+
+) {
+    @PrimaryKey(autoGenerate = true)
+    var lessonId: Long = 0L
+
+}
