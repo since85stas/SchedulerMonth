@@ -21,9 +21,12 @@ data class Section(
 
     @ColumnInfo(name = "current_month_id")
     var currentMonthId : Int = 0
+
 ) {
     @PrimaryKey(autoGenerate = true )
     @ColumnInfo(name = "Id")
     var sectionId: Long = 0L
 
+    @ColumnInfo(name = "section_creation_time")
+    var sectionCreatedTime:Long = System.currentTimeMillis()
 }

@@ -6,6 +6,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import java.util.concurrent.atomic.AtomicLongFieldUpdater
 
 private val CURR_ID : Long = 44L
 
@@ -41,4 +42,18 @@ abstract class LessonsDatabaseDao {
      */
     @Query("SELECT * FROM main_table WHERE mainId = :key")
     abstract fun getCurrentSection(key: Long): LiveData<MainData>
+
+    /**
+     * создает новый временной период в БД
+     */
+    @Insert
+    abstract fun insertPeriod(period: Period)
+
+    @Query("SELECT * FROM period_count_table WHERE periodId = :id")
+    abstract fun getPeriodById(id: Long) : Period
+
+    @Query("SELECT * FROM period_count_table ORDER BY period_start_date")
+    abstract fun getAllPeriods() : List<Period>
+
+
 }

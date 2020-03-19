@@ -9,5 +9,7 @@ import stas.batura.schedulermonth.ui.utils.EditTextWatcher
  */
 @BindingAdapter("addEditTextWatcher")
 fun bindEditText(editText: EditText, editTextWatcher: EditTextWatcher) {
+    val string = editText.text.toString()
+    editTextWatcher.setString(editText.text.toString())
     editText.addTextChangedListener(editTextWatcher)
 }
