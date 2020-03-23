@@ -32,15 +32,16 @@ class SectionFragment : Fragment() {
 
         val sectionFragmentArgs by navArgs<SectionFragmentArgs>()
 
+        // id of opened section
         val openedId = sectionFragmentArgs.sectionIdtoOpen
 
-//         Get a reference to the binding object and inflate the fragment views.
+        // Get a reference to the binding object and inflate the fragment views.
         val bindings : SectionFragmentBinding = DataBindingUtil
-            .inflate(inflater, R.layout.section_fragment,container,false)
+            .inflate(inflater, R.layout.section_fragment, container,false)
 
         val application : Application = requireNotNull(this.activity).application
         val database = LessonsDatabase.getInstance(application).lessonsDatabaseDao
-        val viewModelFactory = CreateSectionViewModelFactory( database, application)
+        val viewModelFactory = SectionViewModelFactory( database, application)
 
         // get a view model
         viewModel = ViewModelProviders.of(this, viewModelFactory)

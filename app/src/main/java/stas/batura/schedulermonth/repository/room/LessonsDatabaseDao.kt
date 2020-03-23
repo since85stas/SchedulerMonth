@@ -14,7 +14,7 @@ private val CURR_ID : Long = 44L
 abstract class LessonsDatabaseDao {
 
     @Insert
-    abstract fun insertSection(section: Section)
+    abstract fun insertSection(section: Section) : Long
 
     @Query("SELECT * FROM sections_table WHERE Id = :key")
     abstract fun qetSection(key: Long): LiveData<Section?>

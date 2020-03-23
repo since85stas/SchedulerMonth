@@ -29,17 +29,22 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
 
     fun saveSection(section: Section) {
         uiScope.launch {
-            saveSectionDb(section)
+            val id = saveSectionDb(section)
+            print("get section")
         }
     }
 
     /**
      * добавля т данные о добавленной секции в базу данных
      */
-    private suspend fun saveSectionDb(section: Section) {
+    private suspend fun saveSectionDb(section: Section) : Long {
         withContext(Dispatchers.IO) {
-            dataSource.insertSection(section)
+
+            val result = dataSource.insertSection(section)
+
+            return@withContext result
         }
+
     }
 
 
