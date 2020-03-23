@@ -1,13 +1,15 @@
 package stas.batura.schedulermonth.ui.create
 
 import android.app.Application
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import stas.batura.schedulermonth.repository.Repository
 import stas.batura.schedulermonth.repository.room.LessonsDatabaseDao
 import stas.batura.schedulermonth.repository.room.Section
-import stas.batura.schedulermonth.ui.utils.EditTextWatcher
+import stas.batura.schedulermonth.ui.utils.IntegerTextWatcher
+import stas.batura.schedulermonth.ui.utils.StringTextWatcher
 
 class CreateSectionViewModel (val dataSource : LessonsDatabaseDao, val contex: Application): ViewModel() {
 
@@ -19,8 +21,8 @@ class CreateSectionViewModel (val dataSource : LessonsDatabaseDao, val contex: A
         get() = _openHomeFragment
 
     // слушатели для текста
-    val nameTextWatcher : EditTextWatcher = EditTextWatcher()
-    val lessonsTextWatcher : EditTextWatcher = EditTextWatcher()
+    val nameTextWatcher : StringTextWatcher = StringTextWatcher()
+    val lessonsTextWatcher : IntegerTextWatcher = IntegerTextWatcher()
 
     init {
         print("CreateSectionViewModel init")
@@ -29,15 +31,22 @@ class CreateSectionViewModel (val dataSource : LessonsDatabaseDao, val contex: A
     /**
      * получение информации о новой секции из UI
      */
-    private fun creteSection() : Section {
-        val section = Section(
-            nameTextWatcher.string,
-            0,
-            30,
-            lessonsTextWatcher.string.toInt(),
-            0
-        )
-        return section
+    private fun creteSection() : Section? {
+        val lessons = lessonsTextWatcher.number
+        if (lessons > 0) {
+            val section = Section(
+                nameTextWatcher.string,
+                0,
+                30,
+                lessons,
+                0
+            )
+            return section
+        } else {
+            val toast = Toast.makeText(contex, "Wrong section format", Toast.LENGTH_LONG)
+            toast.show()
+            return null
+        }
     }
 
     /**
@@ -52,10 +61,11 @@ class CreateSectionViewModel (val dataSource : LessonsDatabaseDao, val contex: A
      */
     fun okButtonClicked() {
         val section = creteSection()
-        saveSectionInDb(section)
-        navigateToHome()
+        if (section != null) {
+            saveSectionInDb(section)
+            navigateToHome()
+        }
     }
-
 
     /**
      *вызываетс для нажатии кнопки новой секции

@@ -2,31 +2,37 @@ package stas.batura.schedulermonth.ui.utils
 
 import android.text.Editable
 import android.text.TextWatcher
+import java.lang.Exception
 
 /*
-    класс для получения текста из EditText простейший вариант
+    класс для получения целого числа из EditText простейший вариант
     без особых наваротов, для нормального использования надо доработать
  */
-class EditTextWatcher : TextWatcher {
+class IntegerTextWatcher : TextWatcher {
 
-    var _string:String = ""
+    private var _number:Int = 4
 
-    fun setString( string: String) {
-        _string = string
+    fun setNum(value : Int) {
+        _number = value
     }
 
-    val string:String
-        get() = _string
+    val number:Int
+        get() = _number
 
     override fun afterTextChanged(s: Editable?) {
+        try {
+            _number = s!!.toString().toInt()
+        } catch (exc : Exception) {
+            print("Error in int number +$exc")
+        }
+
     }
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-        _string = s.toString()
     }
 
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-        _string = s.toString()
+//        _number = s.toString().toInt()
     }
 
 

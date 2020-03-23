@@ -96,8 +96,8 @@
                 android:layout_height="wrap_content"
                 style="@style/BasicTextStyle"
                 android:inputType="number"
-                addEditTextWatcher="@{viewModel.lessonsTextWatcher}"
-                android:text="2"
+                addIntEditTextWatcher="@{viewModel.lessonsTextWatcher}"
+                android:text="4"
                 />
         </LinearLayout>
 

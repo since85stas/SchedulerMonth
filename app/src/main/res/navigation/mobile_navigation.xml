@@ -19,27 +19,31 @@
         android:id="@+id/nav_create_section"
         android:name="stas.batura.schedulermonth.ui.create.SectionCreateFragmnet"
         android:label="CretaeSection"
-        tools:layout="@layout/create_section_dialog">
+        tools:layout="@layout/create_section_fragment">
         <action
             android:id="@+id/open_home"
             app:destination="@+id/nav_home"/>
+
+        <action
+            android:id="@+id/open_created_section"
+            app:destination="@id/nav_section"
+
+            />
+
+
     </fragment>
 
     <fragment
-        android:id="@+id/nav_tools"
-        android:name="stas.batura.schedulermonth.ui.tools.ToolsFragment"
-        android:label="@string/menu_tools"
-        tools:layout="@layout/fragment_tools" />
+        android:id="@+id/nav_section"
+        android:name="stas.batura.schedulermonth.ui.section.SectionFragment"
+        android:label="Section"
+        tools:layout="@layout/section_fragment"
+        >
+        <argument
+            android:name="sectionIdtoOpen"
+            app:argType="integer"
+            android:defaultValue="0" />
 
-    <fragment
-        android:id="@+id/nav_share"
-        android:name="stas.batura.schedulermonth.ui.share.ShareFragment"
-        android:label="@string/menu_share"
-        tools:layout="@layout/fragment_share" />
+    </fragment>
 
-    <fragment
-        android:id="@+id/nav_send"
-        android:name="stas.batura.schedulermonth.ui.send.SendFragment"
-        android:label="@string/menu_send"
-        tools:layout="@layout/fragment_send" />
 </navigation>
