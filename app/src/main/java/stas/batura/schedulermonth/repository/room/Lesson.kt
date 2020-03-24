@@ -13,20 +13,19 @@ import androidx.room.PrimaryKey
         , onDelete = CASCADE)])
 data class Lesson(
 
-    @ColumnInfo(name = "lesson_date")
-    val lessonDate: Long = System.currentTimeMillis(),
-
     @ColumnInfo(name = "lesson_is_complete")
     var lessonIsComplete: Int = 0,
 
     @ColumnInfo(name = "month_id")
-    var monthId: Int = -1,
+    var monthId: Long = -1,
 
     @ColumnInfo(name = "section_id")
-    var sectionId : Int = -1
+    var sectionId : Long = -1
 
 ) {
     @PrimaryKey(autoGenerate = true)
     var lessonId: Long = 0L
 
+    @ColumnInfo(name = "lesson_date")
+    var lessonDate: Long = System.currentTimeMillis()
 }

@@ -49,11 +49,27 @@ abstract class LessonsDatabaseDao {
     @Insert
     abstract fun insertPeriod(period: Period)
 
+    /**
+     * информация о конкретном периоде
+     */
     @Query("SELECT * FROM period_count_table WHERE periodId = :id")
     abstract fun getPeriodById(id: Long) : Period
 
+    /**
+     * все периоды
+     */
     @Query("SELECT * FROM period_count_table ORDER BY period_start_date")
     abstract fun getAllPeriods() : List<Period>
 
+    /**
+     * записываем информацию о уроках
+     */
+    @Insert
+    abstract fun insertLesson(lesson: Lesson)
 
+    /**
+     *  получаем все уроки в секции за выбранный период
+     */
+    @Query(  "SELECT * FROM lessons_count_table WHERE section_id = :sectionId AND month_id = :periodId  ORDER BY lessonId")
+    abstract fun getAllLessonsInPeriod (periodId : Long, sectionId: Long) : LiveData<List<Lesson>>
 }

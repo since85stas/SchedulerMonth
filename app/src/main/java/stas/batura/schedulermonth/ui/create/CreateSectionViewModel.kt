@@ -6,7 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import stas.batura.schedulermonth.repository.Repository
+import stas.batura.schedulermonth.repository.room.Lesson
 import stas.batura.schedulermonth.repository.room.LessonsDatabaseDao
+import stas.batura.schedulermonth.repository.room.Period
 import stas.batura.schedulermonth.repository.room.Section
 import stas.batura.schedulermonth.ui.utils.IntegerTextWatcher
 import stas.batura.schedulermonth.ui.utils.StringTextWatcher
@@ -19,6 +21,11 @@ class CreateSectionViewModel (val dataSource : LessonsDatabaseDao, val contex: A
     private var _openHomeFragment: MutableLiveData<Boolean> = MutableLiveData(false)
     val openHomeFragment : LiveData<Boolean>
         get() = _openHomeFragment
+
+    // лайв дэйта для навигации в фрагмент секции
+    private var _openSectionFragment: MutableLiveData<Long?> = MutableLiveData(null)
+    val openSectionFragment : LiveData<Long?>
+        get() = _openSectionFragment
 
     // слушатели для текста
     val nameTextWatcher : StringTextWatcher = StringTextWatcher()
@@ -39,7 +46,7 @@ class CreateSectionViewModel (val dataSource : LessonsDatabaseDao, val contex: A
                 0,
                 30,
                 lessons,
-                0
+                1
             )
             return section
         } else {
@@ -50,10 +57,18 @@ class CreateSectionViewModel (val dataSource : LessonsDatabaseDao, val contex: A
     }
 
     /**
-     * сохраняем секцию в БД
+     * создаем первоночальный список уроков
      */
-    private fun saveSectionInDb(section: Section) {
-        repository.saveSection(section)
+    private fun createInitLessons(sectionId : Long, lessons: Int) {
+        for (i in 0 until lessons) {
+            val lesson = Lesson  (
+                0,
+                1,
+                sectionId
+            )
+
+            repository.insertLesson(lesson)
+        }
     }
 
     /**
@@ -62,8 +77,9 @@ class CreateSectionViewModel (val dataSource : LessonsDatabaseDao, val contex: A
     fun okButtonClicked() {
         val section = creteSection()
         if (section != null) {
-            saveSectionInDb(section)
-            navigateToHome()
+            val sectionId =  repository.saveSection(section)
+            createInitLessons(sectionId, section.lessonsInPeriod)
+            navigateToSection(sectionId)
         }
     }
 
@@ -83,5 +99,17 @@ class CreateSectionViewModel (val dataSource : LessonsDatabaseDao, val contex: A
         _openHomeFragment.value = false
     }
 
+    /**
+     * вызывается при навигации в фрагмент секции
+     */
+    private fun navigateToSection( id:Long ) {
+        _openSectionFragment.value = id
+    }
 
+    /**
+     * вызывается после навигации в фрагмент секции
+     */
+    fun navigateToSectionFinish() {
+        _openSectionFragment.value = null
+    }
 }

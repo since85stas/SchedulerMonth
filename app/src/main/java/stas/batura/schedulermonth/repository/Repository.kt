@@ -3,6 +3,7 @@ package stas.batura.schedulermonth.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
+import stas.batura.schedulermonth.repository.room.Lesson
 import stas.batura.schedulermonth.repository.room.LessonsDatabaseDao
 import stas.batura.schedulermonth.repository.room.MainData
 import stas.batura.schedulermonth.repository.room.Section
@@ -25,24 +26,30 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
      * a [ViewModel] update the UI after performing some processing.
      */
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+    private val ioScopew = CoroutineScope(Dispatchers.IO + viewModelJob)
 
-
-    fun saveSection(section: Section) {
-        uiScope.launch {
-            val id = saveSectionDb(section)
-            print("get section")
+    /**
+     * сохраняем новую секцию и получаем ее номер
+     */
+    fun saveSection(section: Section) : Long {
+        var result = 0L
+        runBlocking {
+            val job = async {
+                val id = saveSectionDb(section)
+                result = id
+            }
+            job.await()
         }
+        return result
     }
 
     /**
-     * добавля т данные о добавленной секции в базу данных
+     * добавляет данные о добавленной секции в базу данных
      */
     private suspend fun saveSectionDb(section: Section) : Long {
-        withContext(Dispatchers.IO) {
-
+        return withContext(Dispatchers.IO) {
             val result = dataSource.insertSection(section)
-
-            return@withContext result
+            result
         }
 
     }
@@ -97,6 +104,19 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
         }
     }
 
+    fun insertLesson (lesson: Lesson) {
+        ioScopew.launch{
+            dataSource.insertLesson(lesson)
+        }
+    }
+
+    /**
+     * получаем список урококв из БД
+     */
+    fun getLessonsInPeriod(sectionId: Long, periodId : Long) : LiveData<List<Lesson>>{
+            val result = dataSource.getAllLessonsInPeriod(periodId, sectionId)
+        return result
+    }
 
     private fun addNewPeriodInDb() {
 

@@ -41,8 +41,7 @@
         >
         <argument
             android:name="sectionIdtoOpen"
-            app:argType="integer"
-            android:defaultValue="0" />
+            app:argType="long" />
 
     </fragment>
 

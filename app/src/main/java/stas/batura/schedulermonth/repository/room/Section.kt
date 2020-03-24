@@ -20,7 +20,7 @@ data class Section(
     var lessonsInPeriod : Int = 0,
 
     @ColumnInfo(name = "current_month_id")
-    var currentMonthId : Int = 0
+    var currentMonthId : Long = 0
 
 ) {
     @PrimaryKey(autoGenerate = true )

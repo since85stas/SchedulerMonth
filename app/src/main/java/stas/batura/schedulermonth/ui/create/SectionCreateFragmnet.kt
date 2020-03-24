@@ -38,15 +38,25 @@ class SectionCreateFragmnet : Fragment () {
         // связываем переменные в модели и ui
         bindings.viewModel = viewModel
 
+        // открываем домашний фрагмент
         viewModel.openHomeFragment.observe(viewLifecycleOwner, Observer {
             if (it) {
                 viewModel.navigateToHomeFinish()
 //                this.findNavController().navigate(SectionCreateFragmnetDirections.openHome())
                 val test = -1;
-                val action = SectionCreateFragmnetDirections.openCreatedSection().setSectionIdtoOpen(test)
+                val action = SectionCreateFragmnetDirections.openHome()
                 this.findNavController().navigate(action)
             }
         })
+
+        viewModel.openSectionFragment.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                viewModel.navigateToSectionFinish()
+                val action = SectionCreateFragmnetDirections.openCreatedSection(it)
+                this.findNavController().navigate(action)
+            }
+        })
+
 
         return bindings.root
     }

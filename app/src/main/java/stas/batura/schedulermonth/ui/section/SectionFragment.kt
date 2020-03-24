@@ -7,23 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import kotlinx.android.synthetic.main.section_fragment.*
 import stas.batura.schedulermonth.R
-import stas.batura.schedulermonth.databinding.CreateSectionFragmentBinding
 import stas.batura.schedulermonth.databinding.SectionFragmentBinding
 import stas.batura.schedulermonth.repository.room.LessonsDatabase
-import stas.batura.schedulermonth.ui.create.CreateSectionViewModel
-import stas.batura.schedulermonth.ui.create.CreateSectionViewModelFactory
-import stas.batura.schedulermonth.ui.create.SectionCreateFragmnetDirections
 
 class SectionFragment : Fragment() {
 
     // view model
     lateinit var viewModel : SectionViewModel
 
-
+    /**
+     *  creating view
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,7 +40,7 @@ class SectionFragment : Fragment() {
 
         val application : Application = requireNotNull(this.activity).application
         val database = LessonsDatabase.getInstance(application).lessonsDatabaseDao
-        val viewModelFactory = SectionViewModelFactory( database, application)
+        val viewModelFactory = SectionViewModelFactory( database, application, openedId)
 
         // get a view model
         viewModel = ViewModelProviders.of(this, viewModelFactory)
@@ -50,13 +49,31 @@ class SectionFragment : Fragment() {
         // связываем переменные в модели и ui
         bindings.viewModel = viewModel
 
-//        viewModel.openHomeFragment.observe(viewLifecycleOwner, Observer {
-//            if (it) {
-//                viewModel.navigateToHomeFinish()
-//                this.findNavController().navigate(SectionCreateFragmnetDirections.openHome())
-//            }
-//        })
-
         return bindings.root
+    }
+
+    /**
+     * populating view
+     */
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.sectionLive.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                section_name.text = it.sectionName
+
+                // получаем доп информацию о секции
+                viewModel.getSectionInfo(it)
+            } else {
+                print("smth wrong with section getting from DB")
+            }
+        })
+
+        viewModel.lessonslive!!.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+
+                print ("lessons")
+            }
+        })
     }
 }

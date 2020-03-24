@@ -18,7 +18,7 @@ data class Period(
 //    var lessonIsComplete: Int = 0,
 
     @ColumnInfo(name = "section_id")
-    var sectionId : Int = -1
+    var sectionId : Long = -1
 
 ) {
     @PrimaryKey(autoGenerate = true)
