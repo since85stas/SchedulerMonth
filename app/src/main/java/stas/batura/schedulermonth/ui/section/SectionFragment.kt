@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.section_fragment.*
 import stas.batura.schedulermonth.R
 import stas.batura.schedulermonth.databinding.SectionFragmentBinding
@@ -19,6 +21,8 @@ class SectionFragment : Fragment() {
 
     // view model
     lateinit var viewModel : SectionViewModel
+
+    lateinit var viewManager : RecyclerView.LayoutManager
 
     /**
      *  creating view
@@ -69,11 +73,20 @@ class SectionFragment : Fragment() {
             }
         })
 
-        viewModel.lessonslive!!.observe(viewLifecycleOwner, Observer {
+        // наблюдаем за списком уроков
+        viewModel.lessonslive.observe(viewLifecycleOwner, Observer {
             if (it != null) {
-
+                val adapter = LessonsAdapter(it)
+                section_lessons_current_period.adapter = adapter
                 print ("lessons")
+            } else {
+                print ("wrong")
             }
         })
+
+        viewManager = LinearLayoutManager(parentFragment!!.requireContext())
+        section_lessons_current_period.apply {
+            layoutManager = viewManager
+        }
     }
 }
