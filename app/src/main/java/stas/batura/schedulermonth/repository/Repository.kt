@@ -121,6 +121,29 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
     private fun addNewPeriodInDb() {
 
     }
+
+    fun setCompletLessonInDb(sectionId: Long) {
+        val lessonId = getNotComplLessonIdFromDb(sectionId)
+            if (lessonId != null) {
+            ioScopew.launch {
+                dataSource.setNextLessonComplete(sectionId,lessonId)
+            }
+        } else {
+
+        }
+    }
+
+    fun getNotComplLessonIdFromDb(sectionId: Long) : Long?{
+        var result : Long?= 0L
+        runBlocking {
+            val job = async {
+                val id = dataSource.getFirstNotCompleteLessonId(sectionId)
+                result = id
+            }
+            job.await()
+        }
+        return result
+    }
 }
 
 

@@ -2,10 +2,7 @@ package stas.batura.schedulermonth.repository.room
 
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import java.util.concurrent.atomic.AtomicLongFieldUpdater
 
 private val CURR_ID : Long = 44L
@@ -72,4 +69,20 @@ abstract class LessonsDatabaseDao {
      */
     @Query(  "SELECT * FROM lessons_count_table WHERE section_id = :sectionId AND month_id = :periodId  ORDER BY lessonId")
     abstract fun getAllLessonsInPeriod (periodId : Long, sectionId: Long) : LiveData<List<Lesson>>
+
+    /**
+     * записываем что урок закончен по его номеру
+     */
+    @Query("UPDATE lessons_count_table SET lesson_is_complete = 1 WHERE section_id = :sectionId AND lessonId = :lessonId")
+    abstract fun setNextLessonComplete(sectionId: Long, lessonId : Long)
+
+    /**
+     * записываем что урок НЕ закончен по его номеру
+     */
+    @Query("UPDATE lessons_count_table SET lesson_is_complete = 0 WHERE section_id = :sectionId AND lessonId = :lessonId")
+    abstract fun setNextLessonNoComplete(sectionId: Long, lessonId : Long?)
+
+    @Query("SELECT lessonId FROM lessons_count_table WHERE section_id = :sectionId AND lesson_is_complete = 0 ORDER BY lessonId")
+    abstract suspend fun getFirstNotCompleteLessonId(sectionId: Long) : Long?
+
 }

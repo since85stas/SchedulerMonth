@@ -37,5 +37,9 @@ class SectionViewModel (val dataSource : LessonsDatabaseDao,
         print("end")
     }
 
+    fun onNextButtonPressed() {
+        repository.setCompletLessonInDb(sectionId)
+    }
+
 
 }
