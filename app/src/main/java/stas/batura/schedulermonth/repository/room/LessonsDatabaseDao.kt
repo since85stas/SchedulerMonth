@@ -22,6 +22,12 @@ abstract class LessonsDatabaseDao {
     @Query("SELECT * FROM sections_table ORDER BY Id")
     abstract fun getSections(): LiveData<List<Section>>
 
+    /**
+     * обновляем информацию о текущем месяце
+     */
+    @Query("UPDATE sections_table SET current_month_id = :newMonthId WHERE Id = :sectionId")
+    abstract fun updateCurrentPeriodNum( sectionId: Long,  newMonthId : Long )
+
 
     /**
      * записываем номер выбранной секции
@@ -49,7 +55,7 @@ abstract class LessonsDatabaseDao {
     /**
      * информация о конкретном периоде
      */
-    @Query("SELECT * FROM period_count_table WHERE periodId = :id")
+    @Query("SELECT * FROM period_count_table WHERE period_id = :id")
     abstract fun getPeriodById(id: Long) : Period
 
     /**

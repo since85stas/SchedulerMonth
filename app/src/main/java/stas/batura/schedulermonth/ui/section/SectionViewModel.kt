@@ -46,5 +46,30 @@ class SectionViewModel (val dataSource : LessonsDatabaseDao,
         repository.setCompletLessonInDb(sectionId)
     }
 
+    fun createNewPeriod() {
+        val sectionId = sectionLive.value!!.sectionId
+        val lessons   = sectionLive.value!!.lessonsInPeriod
+        val newPeriod = sectionLive.value!!.currentMonthId + 1
 
+//        lessonslive.removeSource()
+
+        repository.updateCurrSectionValue(sectionId, newPeriod)
+
+        insertNewPeriodLessons(sectionId, lessons, newPeriod)
+    }
+
+    /**
+     * создаем список уроков для нового месяца
+     */
+    private fun insertNewPeriodLessons(sectionId : Long, lessons: Int, newPeriod : Long) {
+        for (i in 0 until lessons) {
+            val lesson = Lesson  (
+                0,
+                newPeriod,
+                sectionId
+            )
+
+            repository.insertLesson(lesson)
+        }
+    }
 }

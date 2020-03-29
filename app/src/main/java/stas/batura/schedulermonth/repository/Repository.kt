@@ -89,7 +89,7 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
      * Выбранный секцию делаем записанным по умолчанию
      */
     fun setCurrentSection(sectionId: Int) {
-        uiScope.launch {
+        ioScopew.launch {
             setCurrentSectionDb(sectionId)
         }
     }
@@ -101,6 +101,12 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
         return withContext(Dispatchers.IO) {
             val mainData = MainData(44L, sectionId)
             dataSource.insertMainData(sectionId)
+        }
+    }
+
+    fun updateCurrSectionValue( sectionId: Long, newId : Long ) {
+        ioScopew.launch {
+            dataSource.updateCurrentPeriodNum(sectionId, newId)
         }
     }
 

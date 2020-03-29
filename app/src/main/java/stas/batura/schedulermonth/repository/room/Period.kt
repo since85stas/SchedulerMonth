@@ -13,16 +13,12 @@ import androidx.room.PrimaryKey
     )])
 data class Period(
 
-//
-//    @ColumnInfo(name = "")
-//    var lessonIsComplete: Int = 0,
-
     @ColumnInfo(name = "section_id")
     var sectionId : Long = -1
 
 ) {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "periodId")
+    @ColumnInfo(name = "period_id")
     var periodId: Long = 0
 
     @ColumnInfo(name = "period_start_date")

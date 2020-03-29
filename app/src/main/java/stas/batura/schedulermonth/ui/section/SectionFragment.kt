@@ -81,11 +81,14 @@ class SectionFragment : Fragment() {
                 section_lessons_current_period.adapter = adapter
 
                 // check if all lessons done
-                if (adapter.isFull()) {
+                if ( adapter.isFull() ) {
                     val toast = Toast.makeText(requireNotNull(this.activity),
                         "All lessons complete",
                         Toast.LENGTH_LONG);
                     toast.show()
+
+                    // creating new period
+                    viewModel.createNewPeriod()
                 }
                 print ("lessons")
             } else {

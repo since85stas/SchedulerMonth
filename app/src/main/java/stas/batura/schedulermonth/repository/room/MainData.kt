@@ -11,9 +11,10 @@ import androidx.room.PrimaryKey
     , onDelete = ForeignKey.CASCADE
 )])
 data class MainData(
+
     @PrimaryKey
     var mainId: Long = 0L,
 
     @ColumnInfo(name = "current_section_id")
-    var currentSectionId : Int = -1
+    var currentSectionId: Int = -1
 )
