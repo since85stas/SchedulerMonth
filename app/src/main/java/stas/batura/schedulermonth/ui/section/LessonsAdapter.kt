@@ -45,4 +45,15 @@ class LessonsAdapter (private val data : List<Lesson>)
     override fun onBindViewHolder(holder: LessonsViewHolder, position: Int) {
         holder.bind(data.get(position))
     }
-}
+
+    /**
+     * проверяем все ли уроки завершины
+     */
+    fun isFull() : Boolean {
+        var result = true
+        for (l in data) {
+            result = result && (l.lessonIsComplete == 1)
+        }
+        return result
+    }
+ }

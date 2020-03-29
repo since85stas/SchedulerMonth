@@ -26,9 +26,11 @@ class SectionViewModel (val dataSource : LessonsDatabaseDao,
     init {
         print("section view model created")
         sectionLive = repository.getSection(sectionId)
-
     }
 
+    /**
+     * получапет информацию о текущей секции
+     */
     fun getSectionInfo (section : Section) {
         var res  = repository.getLessonsInPeriod(section.sectionId, section.currentMonthId)
         lessonslive.addSource(res, Observer {
@@ -37,6 +39,9 @@ class SectionViewModel (val dataSource : LessonsDatabaseDao,
         print("end")
     }
 
+    /**
+     * вызывается при нажатии на кнопку некст
+     */
     fun onNextButtonPressed() {
         repository.setCompletLessonInDb(sectionId)
     }

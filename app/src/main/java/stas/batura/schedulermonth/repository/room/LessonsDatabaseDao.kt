@@ -82,7 +82,11 @@ abstract class LessonsDatabaseDao {
     @Query("UPDATE lessons_count_table SET lesson_is_complete = 0 WHERE section_id = :sectionId AND lessonId = :lessonId")
     abstract fun setNextLessonNoComplete(sectionId: Long, lessonId : Long?)
 
+    /**
+     * получает номер последнего неоконченного урока в последнем периоде
+     */
     @Query("SELECT lessonId FROM lessons_count_table WHERE section_id = :sectionId AND lesson_is_complete = 0 ORDER BY lessonId")
     abstract suspend fun getFirstNotCompleteLessonId(sectionId: Long) : Long?
+
 
 }

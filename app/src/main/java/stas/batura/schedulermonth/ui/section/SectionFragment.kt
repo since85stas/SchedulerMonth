@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -78,6 +79,14 @@ class SectionFragment : Fragment() {
             if (it != null) {
                 val adapter = LessonsAdapter(it)
                 section_lessons_current_period.adapter = adapter
+
+                // check if all lessons done
+                if (adapter.isFull()) {
+                    val toast = Toast.makeText(requireNotNull(this.activity),
+                        "All lessons complete",
+                        Toast.LENGTH_LONG);
+                    toast.show()
+                }
                 print ("lessons")
             } else {
                 print ("wrong")
