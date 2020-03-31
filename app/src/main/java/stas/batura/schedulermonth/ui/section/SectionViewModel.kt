@@ -23,6 +23,8 @@ class SectionViewModel (val dataSource : LessonsDatabaseDao,
 
     var lessonslive : MediatorLiveData<List<Lesson>> = MediatorLiveData()
 
+    var currentLessonsListner: LiveData<List<Lesson>>? = null
+
     init {
         print("section view model created")
         sectionLive = repository.getSection(sectionId)
@@ -32,8 +34,8 @@ class SectionViewModel (val dataSource : LessonsDatabaseDao,
      * получапет информацию о текущей секции
      */
     fun getSectionInfo (section : Section) {
-        var res  = repository.getLessonsInPeriod(section.sectionId, section.currentMonthId)
-        lessonslive.addSource(res, Observer {
+        currentLessonsListner  = repository.getLessonsInPeriod(section.sectionId, section.currentMonthId)
+        lessonslive.addSource(currentLessonsListner!!, Observer {
             lessonslive.value = it
         })
         print("end")
@@ -46,12 +48,15 @@ class SectionViewModel (val dataSource : LessonsDatabaseDao,
         repository.setCompletLessonInDb(sectionId)
     }
 
+    /**
+     * создает новый период и добавляет в базу
+     */
     fun createNewPeriod() {
         val sectionId = sectionLive.value!!.sectionId
         val lessons   = sectionLive.value!!.lessonsInPeriod
         val newPeriod = sectionLive.value!!.currentMonthId + 1
 
-//        lessonslive.removeSource()
+        lessonslive.removeSource(currentLessonsListner!!)
 
         repository.updateCurrSectionValue(sectionId, newPeriod)
 

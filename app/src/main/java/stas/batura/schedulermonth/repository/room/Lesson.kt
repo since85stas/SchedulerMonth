@@ -28,4 +28,7 @@ data class Lesson(
 
     @ColumnInfo(name = "lesson_date")
     var lessonDate: Long = System.currentTimeMillis()
+
+    @ColumnInfo(name = "lesson_note")
+    var lessonNote: String = ""
 }

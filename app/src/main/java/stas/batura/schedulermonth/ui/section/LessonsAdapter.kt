@@ -1,6 +1,5 @@
 package stas.batura.schedulermonth.ui.section
 
-import android.text.style.TtsSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,10 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.lessons_inn_section_item.view.*
 import stas.batura.schedulermonth.R
 import stas.batura.schedulermonth.repository.room.Lesson
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
+
 
 class LessonsAdapter (private val data : List<Lesson>)
     : RecyclerView.Adapter<LessonsAdapter.LessonsViewHolder>() {
@@ -18,11 +20,12 @@ class LessonsAdapter (private val data : List<Lesson>)
 
         fun bind(item: Lesson) {
 //            view.preview_list_image.
-            view.title_text.text = "Lesson ${item.lessonId}"
+            view.title_text.text = "Lesson ${item.lessonId} period ${item.monthId}"
 
             if (item.lessonIsComplete == 1) {
                 val lessonDate: Date = Date(item.lessonDate)
-                view.lesson_date.text = lessonDate.toString()
+                val df: DateFormat = SimpleDateFormat("yyyy.MM.dd")
+                view.lesson_date.text = df.format(lessonDate)
             } else {
                 view.lesson_date.text = "null"
             }
