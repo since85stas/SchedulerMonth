@@ -3,10 +3,7 @@ package stas.batura.schedulermonth.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
-import stas.batura.schedulermonth.repository.room.Lesson
-import stas.batura.schedulermonth.repository.room.LessonsDatabaseDao
-import stas.batura.schedulermonth.repository.room.MainData
-import stas.batura.schedulermonth.repository.room.Section
+import stas.batura.schedulermonth.repository.room.*
 
 class Repository(private val dataSource: LessonsDatabaseDao) {
 
@@ -83,6 +80,21 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
     fun getSections(): LiveData<List<Section>> {
         var sections = dataSource.getSections()
         return sections
+    }
+
+    /**
+     *
+     */
+    fun insertNewPeriod (period: Period) : Long {
+        var result = 0L
+        runBlocking {
+            val job = async {
+                val id = dataSource.insertPeriod(period)
+                result = id
+            }
+            job.await()
+        }
+        return result
     }
 
     /**

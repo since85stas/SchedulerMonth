@@ -50,7 +50,7 @@ abstract class LessonsDatabaseDao {
      * создает новый временной период в БД
      */
     @Insert
-    abstract fun insertPeriod(period: Period)
+    abstract fun insertPeriod(period: Period) : Long
 
     /**
      * информация о конкретном периоде

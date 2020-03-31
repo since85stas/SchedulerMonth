@@ -41,6 +41,10 @@ class CreateSectionViewModel (val dataSource : LessonsDatabaseDao, val contex: A
     private fun creteSection() : Section? {
         val lessons = lessonsTextWatcher.number
         if (lessons > 0) {
+
+//            val period : Period = Period()
+//            val periodId = repository.insertNewPeriod()
+
             val section = Section(
                 nameTextWatcher.string,
                 0,
@@ -78,9 +82,20 @@ class CreateSectionViewModel (val dataSource : LessonsDatabaseDao, val contex: A
         val section = creteSection()
         if (section != null) {
             val sectionId =  repository.saveSection(section)
+
+            savePeriod(sectionId)
+
             createInitLessons(sectionId, section.lessonsInPeriod)
             navigateToSection(sectionId)
         }
+    }
+
+    private fun savePeriod(sectionId: Long) {
+        //TODO: hardcodel 1
+        val time = System.currentTimeMillis()
+
+        val period : Period = Period(sectionId, 1, time)
+        val periodId = repository.insertNewPeriod(period)
     }
 
     /**

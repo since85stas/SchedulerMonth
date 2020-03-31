@@ -14,13 +14,26 @@ import androidx.room.PrimaryKey
 data class Period(
 
     @ColumnInfo(name = "section_id")
-    var sectionId : Long = -1
+    var sectionId : Long = -1,
 
-) {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @ColumnInfo(name = "period_id")
-    var periodId: Long = 0
+    var periodId: Long = 0,
 
     @ColumnInfo(name = "period_start_date")
-    var periodStartDate: Long = System.currentTimeMillis()
-}
+    var periodStartDate: Long
+)
+
+//data class Period(
+//
+//    @ColumnInfo(name = "section_id")
+//    var sectionId : Long = -1,
+//
+//    @PrimaryKey
+//    @ColumnInfo(name = "period_id")
+//    var periodId: Long = 0) {
+//
+//    @ColumnInfo(name = "period_start_date")
+//    var periodStartDate: Long = System.currentTimeMillis()
+//}
+

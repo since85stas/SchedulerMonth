@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import stas.batura.schedulermonth.repository.Repository
 import stas.batura.schedulermonth.repository.room.Lesson
 import stas.batura.schedulermonth.repository.room.LessonsDatabaseDao
+import stas.batura.schedulermonth.repository.room.Period
 import stas.batura.schedulermonth.repository.room.Section
 
 class SectionViewModel (val dataSource : LessonsDatabaseDao,
@@ -61,6 +62,23 @@ class SectionViewModel (val dataSource : LessonsDatabaseDao,
         repository.updateCurrSectionValue(sectionId, newPeriod)
 
         insertNewPeriodLessons(sectionId, lessons, newPeriod)
+
+        savePeriod(sectionId, newPeriod)
+    }
+
+    /**
+     * сохраняем информацию о новом периоде
+     */
+    private fun savePeriod(sectionId: Long, perioId: Long) {
+        val time = getNextPeriodStartTime()
+
+        val period : Period = Period(sectionId, perioId, time)
+        val periodId = repository.insertNewPeriod(period)
+    }
+
+    private fun getNextPeriodStartTime() : Long {
+
+        return System.currentTimeMillis()
     }
 
     /**
@@ -77,4 +95,6 @@ class SectionViewModel (val dataSource : LessonsDatabaseDao,
             repository.insertLesson(lesson)
         }
     }
+
+
 }
