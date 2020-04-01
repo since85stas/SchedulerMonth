@@ -63,22 +63,21 @@ class SectionViewModel (val dataSource : LessonsDatabaseDao,
 
         insertNewPeriodLessons(sectionId, lessons, newPeriod)
 
-        savePeriod(sectionId, newPeriod)
+        savePeriod()
     }
 
     /**
      * сохраняем информацию о новом периоде
      */
-    private fun savePeriod(sectionId: Long, perioId: Long) {
-        val time = getNextPeriodStartTime()
+    private fun savePeriod() {
+        val oldPeriod = repository.getPeriod(sectionLive.value!!.sectionId,
+            sectionLive.value!!.currentMonthId)
 
-        val period : Period = Period(sectionId, perioId, time)
+        val period : Period = Period(sectionId,
+            oldPeriod.periodId+1,
+            oldPeriod.periodEndDate,
+            oldPeriod.periodEndDate + sectionLive.value!!.timePeriodMillis)
         val periodId = repository.insertNewPeriod(period)
-    }
-
-    private fun getNextPeriodStartTime() : Long {
-
-        return System.currentTimeMillis()
     }
 
     /**

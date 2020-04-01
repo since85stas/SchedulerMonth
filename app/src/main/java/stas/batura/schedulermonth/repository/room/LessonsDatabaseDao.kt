@@ -55,8 +55,8 @@ abstract class LessonsDatabaseDao {
     /**
      * информация о конкретном периоде
      */
-    @Query("SELECT * FROM period_count_table WHERE period_id = :id")
-    abstract fun getPeriodById(id: Long) : Period
+    @Query("SELECT * FROM period_count_table WHERE period_id = :periodId AND section_id =:sectionId")
+    abstract fun getPeriodById(periodId: Long, sectionId: Long) : Period
 
     /**
      * все периоды

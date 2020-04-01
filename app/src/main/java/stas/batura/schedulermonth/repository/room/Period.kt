@@ -21,7 +21,10 @@ data class Period(
     var periodId: Long = 0,
 
     @ColumnInfo(name = "period_start_date")
-    var periodStartDate: Long
+    var periodStartDate: Long,
+
+    @ColumnInfo(name = "perid_end_date")
+    var periodEndDate:Long
 )
 
 //data class Period(

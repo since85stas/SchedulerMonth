@@ -13,8 +13,8 @@ data class Section(
     @ColumnInfo(name = "section_type")
     var sectionType: Long = 0,
 
-    @ColumnInfo(name = "time_period_days")
-    var timePeriodDays: Int = 30,
+    @ColumnInfo(name = "time_period_millis")
+    var timePeriodMillis: Long = 0,
 
     @ColumnInfo(name = "lessons_in_period")
     var lessonsInPeriod : Int = 0,

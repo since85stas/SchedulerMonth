@@ -98,6 +98,21 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
     }
 
     /**
+     * сохраняем новую секцию и получаем ее номер
+     */
+    fun getPeriod(sectionId: Long, periodId: Long) : Period {
+        var result : Period? = null
+        runBlocking {
+            val job = async {
+                val per = dataSource.getPeriodById(periodId, sectionId)
+                result = per
+            }
+            job.await()
+        }
+        return result!!
+    }
+
+    /**
      * Выбранный секцию делаем записанным по умолчанию
      */
     fun setCurrentSection(sectionId: Int) {

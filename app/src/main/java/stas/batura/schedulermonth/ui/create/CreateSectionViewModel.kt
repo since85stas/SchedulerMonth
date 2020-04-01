@@ -31,6 +31,10 @@ class CreateSectionViewModel (val dataSource : LessonsDatabaseDao, val contex: A
     val nameTextWatcher : StringTextWatcher = StringTextWatcher()
     val lessonsTextWatcher : IntegerTextWatcher = IntegerTextWatcher()
 
+    var periodInMillis : Long = 0
+
+    private var currentSection : Section? = null
+
     init {
         print("CreateSectionViewModel init")
     }
@@ -45,14 +49,17 @@ class CreateSectionViewModel (val dataSource : LessonsDatabaseDao, val contex: A
 //            val period : Period = Period()
 //            val periodId = repository.insertNewPeriod()
 
-            val section = Section(
+            // for month TODO:
+            periodInMillis = 30*60*60*24;
+
+            currentSection = Section(
                 nameTextWatcher.string,
                 0,
-                30,
+                periodInMillis,
                 lessons,
                 1
             )
-            return section
+            return currentSection
         } else {
             val toast = Toast.makeText(contex, "Wrong section format", Toast.LENGTH_LONG)
             toast.show()
@@ -92,9 +99,10 @@ class CreateSectionViewModel (val dataSource : LessonsDatabaseDao, val contex: A
 
     private fun savePeriod(sectionId: Long) {
         //TODO: hardcodel 1
-        val time = System.currentTimeMillis()
+        val timeStart = System.currentTimeMillis()
+        val timeEnd = timeStart + currentSection!!.timePeriodMillis
 
-        val period : Period = Period(sectionId, 1, time)
+        val period : Period = Period(sectionId, 1, timeStart, timeEnd)
         val periodId = repository.insertNewPeriod(period)
     }
 
