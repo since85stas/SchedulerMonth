@@ -17,10 +17,7 @@ data class Section(
     var timePeriodMillis: Long = 0,
 
     @ColumnInfo(name = "lessons_in_period")
-    var lessonsInPeriod : Int = 0,
-
-    @ColumnInfo(name = "current_month_id")
-    var currentMonthId : Long = 0
+    var lessonsInPeriod : Int = 0
 
 ) {
     @PrimaryKey(autoGenerate = true )
@@ -29,4 +26,7 @@ data class Section(
 
     @ColumnInfo(name = "section_creation_time")
     var sectionCreatedTime:Long = System.currentTimeMillis()
+
+    @ColumnInfo(name = "current_month_id")
+    var currentMonthId : Long = 0
 }

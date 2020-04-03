@@ -10,6 +10,26 @@ private val CURR_ID : Long = 44L
 @Dao
 abstract class LessonsDatabaseDao {
 
+
+    //---------------------------MAIN DATA---------------------------------------------------------
+    /**
+     * записываем номер выбранной секции
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    protected abstract fun insertMainDataDb(mainData: MainData)
+
+    fun insertMainData(sectionId: Long) {
+        val mainData = MainData(CURR_ID, sectionId)
+        insertMainDataDb(mainData)
+    }
+
+    fun insertMainData(sectionId: Long, periodId: Long) {
+        val mainData = MainData(CURR_ID, sectionId)
+        mainData.currentPeriodId = periodId
+        insertMainDataDb(mainData)
+    }
+
+    //--------------------------------SECTION PART-------------------------------------------------
     @Insert
     abstract fun insertSection(section: Section) : Long
 
@@ -23,40 +43,43 @@ abstract class LessonsDatabaseDao {
     abstract fun getSections(): LiveData<List<Section>>
 
     /**
-     * обновляем информацию о текущем месяце
-     */
-    @Query("UPDATE sections_table SET current_month_id = :newMonthId WHERE Id = :sectionId")
-    abstract fun updateCurrentPeriodNum( sectionId: Long,  newMonthId : Long )
-
-
-    /**
-     * записываем номер выбранной секции
-     */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    protected abstract fun insertMainDataDb(mainData: MainData)
-
-    fun insertMainData(sectionId: Int) {
-        val mainData = MainData(CURR_ID, sectionId)
-        insertMainDataDb(mainData)
-    }
-
-    /**
      * получаем номер выбранной секции в LiveData
      */
     @Query("SELECT * FROM main_table WHERE mainId = :key")
-    abstract fun getCurrentSection(key: Long): LiveData<MainData>
+    abstract fun getCurrentMainData(key: Long): LiveData<MainData>
 
+    /**
+     * обновляем номер периода в секции
+     */
+    @Query("UPDATE sections_table SET current_month_id =:periodId WHERE Id = :sectionId")
+    abstract suspend fun updatePeriodIdInSection(sectionId: Long, periodId: Long)
+
+    //----------------------------------PERIOD PART-------------------------------------------------
     /**
      * создает новый временной период в БД
      */
     @Insert
-    abstract fun insertPeriod(period: Period) : Long
+    abstract suspend fun insertPeriod(period: Period) : Long
 
     /**
      * информация о конкретном периоде
      */
     @Query("SELECT * FROM period_count_table WHERE period_id = :periodId AND section_id =:sectionId")
     abstract fun getPeriodById(periodId: Long, sectionId: Long) : Period
+
+    /**
+     * обновляем информацию о текущем месяце
+     */
+    @Query("UPDATE sections_table SET current_month_id = :newMonthId WHERE Id = :sectionId")
+    abstract fun updateCurrentPeriodNum( sectionId: Long,  newMonthId : Long )
+
+    //--------------------------------LESSONS PART-------------------------------------
+    /**
+     *
+     */
+    @Query("SELECT * FROM lessons_count_table INNER JOIN main_table ON main_table.current_period_id = lessons_count_table.month_id WHERE section_id =:sectionId"
+            )
+    abstract fun getLessonsByPeriodOnMainDataVal( sectionId: Long) : LiveData<List<Lesson>>
 
     /**
      * все периоды

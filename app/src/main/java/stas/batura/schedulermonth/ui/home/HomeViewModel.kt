@@ -4,13 +4,9 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.*
 import stas.batura.schedulermonth.repository.Repository
-import stas.batura.schedulermonth.repository.room.LessonsDatabase
 import stas.batura.schedulermonth.repository.room.LessonsDatabaseDao
 import stas.batura.schedulermonth.repository.room.MainData
-import stas.batura.schedulermonth.repository.room.Section
-import kotlin.text.Typography.section
 
 class HomeViewModel (val dataSource : LessonsDatabaseDao, val contex: Application) : ViewModel() {
 
@@ -33,7 +29,7 @@ class HomeViewModel (val dataSource : LessonsDatabaseDao, val contex: Applicatio
     /**
      * создаем LiveData для текущей MainData
      */
-    val currSectionMainData: LiveData<MainData> = repository.getCurrentSection()
+    val currSectionMainData: LiveData<MainData> = repository.getCurrentMainData()
 
     /**
      * инициализируем вьюмодель

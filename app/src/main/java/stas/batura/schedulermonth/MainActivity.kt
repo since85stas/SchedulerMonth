@@ -134,7 +134,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 in listId ->  {
                     Log.d("main", "frag$listId")
-                        val result = mainActivityViewModel.setCurrentSection(it.itemId)
+                        val result = mainActivityViewModel.setCurrentSection(it.itemId.toLong())
                     drawer_layout.closeDrawers()
                    true
                 }

@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -54,6 +55,8 @@ class SectionFragment : Fragment() {
         // связываем переменные в модели и ui
         bindings.viewModel = viewModel
 
+
+
         return bindings.root
     }
 
@@ -93,6 +96,16 @@ class SectionFragment : Fragment() {
                 print ("lessons")
             } else {
                 print ("wrong")
+            }
+        })
+
+        // навигация в календарь
+        viewModel.navToCalendar.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                val action = SectionFragmentDirections.actionNavSectionToNavCalendar()
+                this.findNavController().navigate(action)
+
+                viewModel.navToCalendarfinish()
             }
         })
 

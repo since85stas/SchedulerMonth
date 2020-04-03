@@ -16,5 +16,8 @@ data class MainData(
     var mainId: Long = 0L,
 
     @ColumnInfo(name = "current_section_id")
-    var currentSectionId: Int = -1
-)
+    var currentSectionId: Long = -1 ) {
+
+    @ColumnInfo(name = "current_period_id")
+    var currentPeriodId : Long = -1
+}

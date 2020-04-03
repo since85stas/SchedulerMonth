@@ -36,6 +36,18 @@
             android:onClick="@{() -> viewModel.onNextButtonPressed()}"
             />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="calendar"
+            android:textSize="32sp"
+            app:layout_constraintBottom_toTopOf="@+id/section_lessons_current_period"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/next_lesson_button"
+            android:onClick="@{() -> viewModel.navToCalendar()}"
+            />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/section_lessons_current_period"
             android:layout_width="match_parent"

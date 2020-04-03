@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_calendar">
+    app:startDestination="@+id/nav_home">
 
     <fragment
         android:id="@+id/nav_home"
@@ -29,6 +29,9 @@
             app:destination="@id/nav_section"
 
             />
+        <action
+            android:id="@+id/action_nav_create_section_to_nav_calendar"
+            app:destination="@id/nav_calendar" />
 
 
     </fragment>
@@ -42,6 +45,9 @@
         <argument
             android:name="sectionIdtoOpen"
             app:argType="long" />
+        <action
+            android:id="@+id/action_nav_section_to_nav_calendar"
+            app:destination="@id/nav_calendar" />
 
     </fragment>
 

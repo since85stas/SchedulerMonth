@@ -6,6 +6,9 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import stas.batura.schedulermonth.repository.Repository
 import stas.batura.schedulermonth.repository.room.Lesson
 import stas.batura.schedulermonth.repository.room.LessonsDatabaseDao
@@ -25,6 +28,10 @@ class SectionViewModel (val dataSource : LessonsDatabaseDao,
     var lessonslive : MediatorLiveData<List<Lesson>> = MediatorLiveData()
 
     var currentLessonsListner: LiveData<List<Lesson>>? = null
+
+    private var _navToCalendar : MutableLiveData<Long?> = MutableLiveData(null)
+        val navToCalendar : LiveData<Long?>
+        get() = _navToCalendar
 
     init {
         print("section view model created")
@@ -70,14 +77,24 @@ class SectionViewModel (val dataSource : LessonsDatabaseDao,
      * сохраняем информацию о новом периоде
      */
     private fun savePeriod() {
-        val oldPeriod = repository.getPeriod(sectionLive.value!!.sectionId,
-            sectionLive.value!!.currentMonthId)
+        CoroutineScope(Dispatchers.IO).launch {
 
-        val period : Period = Period(sectionId,
-            oldPeriod.periodId+1,
-            oldPeriod.periodEndDate,
-            oldPeriod.periodEndDate + sectionLive.value!!.timePeriodMillis)
-        val periodId = repository.insertNewPeriod(period)
+            val oldPeriod = repository.getPeriod(
+                sectionLive.value!!.sectionId,
+                sectionLive.value!!.currentMonthId
+            )
+
+            val period: Period = Period(
+                sectionId,
+//                oldPeriod.periodId + 1,
+                oldPeriod.periodEndDate,
+                oldPeriod.periodEndDate + sectionLive.value!!.timePeriodMillis
+            )
+
+            val periodId = repository.insertNewPeriod(period)
+
+            repository.updatePeriodIdInSectionInDb(sectionId, periodId)
+        }
     }
 
     /**
@@ -95,5 +112,17 @@ class SectionViewModel (val dataSource : LessonsDatabaseDao,
         }
     }
 
+    /**
+     *
+     */
+    fun navToCalendar() {
+        _navToCalendar.value = 1
+    }
 
+    /**
+     *
+     */
+    fun navToCalendarfinish() {
+        _navToCalendar.value = null
+    }
 }

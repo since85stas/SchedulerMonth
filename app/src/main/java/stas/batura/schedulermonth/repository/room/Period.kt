@@ -16,16 +16,17 @@ data class Period(
     @ColumnInfo(name = "section_id")
     var sectionId : Long = -1,
 
-    @PrimaryKey
-    @ColumnInfo(name = "period_id")
-    var periodId: Long = 0,
-
     @ColumnInfo(name = "period_start_date")
     var periodStartDate: Long,
 
     @ColumnInfo(name = "perid_end_date")
     var periodEndDate:Long
-)
+) {
+
+    @PrimaryKey (autoGenerate = true)
+    @ColumnInfo(name = "period_id")
+    var periodId: Long = 0
+}
 
 //data class Period(
 //

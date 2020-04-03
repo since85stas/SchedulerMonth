@@ -69,8 +69,8 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
     /**
      * получаем информацию о выбранной по умолчанию секции
      */
-    fun getCurrentSection(): LiveData<MainData> {
-        var res = dataSource.getCurrentSection(44L)
+    fun getCurrentMainData(): LiveData<MainData> {
+        var res = dataSource.getCurrentMainData(44L)
         return res
     }
 
@@ -82,6 +82,12 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
         return sections
     }
 
+    fun updatePeriodIdInSectionInDb(sectionId: Long, periodId: Long) {
+        ioScopew.launch {
+            dataSource.updatePeriodIdInSection(sectionId, periodId)
+        }
+    }
+
     /**
      *
      */
@@ -91,8 +97,7 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
             val job = async {
                 val id = dataSource.insertPeriod(period)
                 result = id
-            }
-            job.await()
+            }.await()
         }
         return result
     }
@@ -102,6 +107,7 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
      */
     fun getPeriod(sectionId: Long, periodId: Long) : Period {
         var result : Period? = null
+
         runBlocking {
             val job = async {
                 val per = dataSource.getPeriodById(periodId, sectionId)
@@ -115,7 +121,7 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
     /**
      * Выбранный секцию делаем записанным по умолчанию
      */
-    fun setCurrentSection(sectionId: Int) {
+    fun setCurrentSection(sectionId: Long) {
         ioScopew.launch {
             setCurrentSectionDb(sectionId)
         }
@@ -124,12 +130,19 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
     /**
      * Сохраняем данные о секции в базе данных
      */
-    private suspend fun setCurrentSectionDb(sectionId: Int) {
-        return withContext(Dispatchers.IO) {
-            val mainData = MainData(44L, sectionId)
+    private suspend fun setCurrentSectionDb(sectionId: Long) {
+        withContext(Dispatchers.IO) {
+//            val mainData = MainData(44L, sectionId)
             dataSource.insertMainData(sectionId)
         }
     }
+
+    fun saveMainDataValues(sectionId: Long, periodId: Long) {
+        ioScopew.launch {
+            dataSource.insertMainData(sectionId, periodId)
+        }
+    }
+
 
     fun updateCurrSectionValue( sectionId: Long, newId : Long ) {
         ioScopew.launch {
@@ -176,6 +189,10 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
             job.await()
         }
         return result
+    }
+
+    fun getLessonsByPeriodOnMainDataValFromDb( sectionId: Long) : LiveData<List<Lesson>> {
+        return dataSource.getLessonsByPeriodOnMainDataVal(sectionId)
     }
 }
 

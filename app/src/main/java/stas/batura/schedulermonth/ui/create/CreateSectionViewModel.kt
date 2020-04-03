@@ -2,9 +2,14 @@ package stas.batura.schedulermonth.ui.create
 
 import android.app.Application
 import android.widget.Toast
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import stas.batura.schedulermonth.repository.Repository
 import stas.batura.schedulermonth.repository.room.Lesson
 import stas.batura.schedulermonth.repository.room.LessonsDatabaseDao
@@ -40,6 +45,25 @@ class CreateSectionViewModel (val dataSource : LessonsDatabaseDao, val contex: A
     }
 
     /**
+     * запускаем при нажатии на кнопку ОК
+     */
+    fun okButtonClicked() {
+        val section = creteSection()
+        if (section != null) {
+            val sectionId =  repository.saveSection(section)
+
+            val periodId = savePeriod(sectionId, currentSection!!.timePeriodMillis)
+
+            // обновляем информацию о периоде в секции
+            repository.updatePeriodIdInSectionInDb(sectionId, periodId)
+
+            createInitLessons(sectionId, periodId ,section.lessonsInPeriod)
+
+            navigateToSection(sectionId)
+        }
+    }
+
+    /**
      * получение информации о новой секции из UI
      */
     private fun creteSection() : Section? {
@@ -52,13 +76,14 @@ class CreateSectionViewModel (val dataSource : LessonsDatabaseDao, val contex: A
             // for month TODO:
             periodInMillis = 30*60*60*24;
 
+
             currentSection = Section(
                 nameTextWatcher.string,
                 0,
                 periodInMillis,
-                lessons,
-                1
+                lessons
             )
+
             return currentSection
         } else {
             val toast = Toast.makeText(contex, "Wrong section format", Toast.LENGTH_LONG)
@@ -70,11 +95,11 @@ class CreateSectionViewModel (val dataSource : LessonsDatabaseDao, val contex: A
     /**
      * создаем первоночальный список уроков
      */
-    private fun createInitLessons(sectionId : Long, lessons: Int) {
+    private fun createInitLessons(sectionId : Long, periodId: Long ,lessons: Int) {
         for (i in 0 until lessons) {
             val lesson = Lesson  (
                 0,
-                1,
+                periodId,
                 sectionId
             )
 
@@ -82,28 +107,18 @@ class CreateSectionViewModel (val dataSource : LessonsDatabaseDao, val contex: A
         }
     }
 
+
     /**
-     * запускаем при нажатии на кнопку ОК
+     * сохрааняем информацию о периоде и возвращяем ее номер
      */
-    fun okButtonClicked() {
-        val section = creteSection()
-        if (section != null) {
-            val sectionId =  repository.saveSection(section)
-
-            savePeriod(sectionId)
-
-            createInitLessons(sectionId, section.lessonsInPeriod)
-            navigateToSection(sectionId)
-        }
-    }
-
-    private fun savePeriod(sectionId: Long) {
-        //TODO: hardcodel 1
+    private fun savePeriod(sectionId: Long, period: Long) : Long {
         val timeStart = System.currentTimeMillis()
-        val timeEnd = timeStart + currentSection!!.timePeriodMillis
+        val timeEnd = timeStart + period
 
-        val period : Period = Period(sectionId, 1, timeStart, timeEnd)
+        val period : Period = Period(sectionId, timeStart, timeEnd)
+
         val periodId = repository.insertNewPeriod(period)
+        return periodId
     }
 
     /**

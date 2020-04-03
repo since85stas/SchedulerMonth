@@ -13,7 +13,7 @@ class MainActivityViewModel (val dataSource : LessonsDatabaseDao, val contex: Ap
 
     var sections : LiveData<List<Section>> = repository.getSections()
 
-    fun setCurrentSection(sectionId: Int) {
+    fun setCurrentSection(sectionId: Long) {
         repository.setCurrentSection(sectionId)
     }
 

@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import kotlinx.android.synthetic.main.calendar_fragment.*
 import stas.batura.schedulermonth.R
 import stas.batura.schedulermonth.databinding.CalendarFragmentBinding
 import stas.batura.schedulermonth.databinding.CreateSectionFragmentBinding
@@ -38,8 +40,23 @@ class CalendarFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(CalendarFragmentViewModel::class.java)
 
+//        calendar_view.
+
 
         return bindings.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.lessonsList.observe(viewLifecycleOwner, Observer {
+
+            print("lessons loading")
+        })
+
+        viewModel.mainData.observe(viewLifecycleOwner, Observer {
+
+            print("main")
+        })
+    }
 }
