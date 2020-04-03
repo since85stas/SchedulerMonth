@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import kotlinx.android.synthetic.main.calendar_fragment.*
 import stas.batura.schedulermonth.R
 import stas.batura.schedulermonth.databinding.CalendarFragmentBinding
@@ -34,13 +35,14 @@ class CalendarFragment : Fragment() {
 
         val application: Application = requireNotNull(this.activity).application
         val database = LessonsDatabase.getInstance(application).lessonsDatabaseDao
-        val viewModelFactory = CalendarFragmentViewModelFactory(database, application)
+
+        val calendarFragmentArgs by navArgs<CalendarFragmentArgs>()
+        val sectionId = calendarFragmentArgs.sectionIdToOpen
+        val viewModelFactory = CalendarFragmentViewModelFactory(database, application, sectionId)
 
         // get a view model
         viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(CalendarFragmentViewModel::class.java)
-
-//        calendar_view.
 
 
         return bindings.root

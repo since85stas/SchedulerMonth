@@ -13,12 +13,13 @@ import stas.batura.schedulermonth.ui.create.CreateSectionViewModel
  */
 class CalendarFragmentViewModelFactory(
     private val dataSource: LessonsDatabaseDao,
-    private val application: Application
+    private val application: Application,
+    private val sectionId : Long
 ) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CalendarFragmentViewModel::class.java)) {
-            return CalendarFragmentViewModel(dataSource, application) as T
+            return CalendarFragmentViewModel(dataSource, application, sectionId) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

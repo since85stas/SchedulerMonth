@@ -71,14 +71,19 @@ abstract class LessonsDatabaseDao {
      * обновляем информацию о текущем месяце
      */
     @Query("UPDATE sections_table SET current_month_id = :newMonthId WHERE Id = :sectionId")
-    abstract fun updateCurrentPeriodNum( sectionId: Long,  newMonthId : Long )
+    abstract fun updateCurrentPeriodNumInSection(sectionId: Long, newMonthId : Long )
+
+    /**
+     * получаем все периоды в данной секции
+     */
+    @Query("SELECT * FROM period_count_table WHERE section_id =:sectionId")
+    abstract fun getPeriodsInSection(sectionId: Long) : LiveData<List<Period>>
 
     //--------------------------------LESSONS PART-------------------------------------
     /**
      *
      */
-    @Query("SELECT * FROM lessons_count_table INNER JOIN main_table ON main_table.current_period_id = lessons_count_table.month_id WHERE section_id =:sectionId"
-            )
+    @Query("SELECT * FROM lessons_count_table WHERE section_id = :sectionId AND month_id IN ( SELECT current_period_id FROM main_table )"  )
     abstract fun getLessonsByPeriodOnMainDataVal( sectionId: Long) : LiveData<List<Lesson>>
 
     /**

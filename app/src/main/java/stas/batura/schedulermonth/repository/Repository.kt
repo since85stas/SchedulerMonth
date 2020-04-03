@@ -25,6 +25,40 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
     private val ioScopew = CoroutineScope(Dispatchers.IO + viewModelJob)
 
+    //-----------------------------MAIN PART----------------------------------------------------
+    /**
+     * получаем информацию о выбранной по умолчанию секции
+     */
+    fun getCurrentMainData(): LiveData<MainData> {
+        var res = dataSource.getCurrentMainData(44L)
+        return res
+    }
+    /**
+     * Выбранный секцию делаем записанным по умолчанию
+     */
+    fun setCurrentSectionInMain(sectionId: Long) {
+        ioScopew.launch {
+            saveMainDataValues(sectionId)
+        }
+    }
+
+    /**
+     * Сохраняем данные о секции в базе данных
+     */
+    private suspend fun saveMainDataValues(sectionId: Long) {
+        withContext(Dispatchers.IO) {
+            //            val mainData = MainData(44L, sectionId)
+            dataSource.insertMainData(sectionId)
+        }
+    }
+
+    fun saveMainDataValues(sectionId: Long, periodId: Long) {
+        ioScopew.launch {
+            dataSource.insertMainData(sectionId, periodId)
+        }
+    }
+
+    //-----------------------------SECTION PART-------------------------------------------------
     /**
      * сохраняем новую секцию и получаем ее номер
      */
@@ -48,15 +82,7 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
             val result = dataSource.insertSection(section)
             result
         }
-
     }
-
-
-//    private fun updateMainData() {
-//        uiScope.launch {
-//            getCurrentSectionFromDb()
-//        }
-//    }
 
     /**
      * получаем информацию о секции из базы данных по номеру секции
@@ -67,14 +93,6 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
     }
 
     /**
-     * получаем информацию о выбранной по умолчанию секции
-     */
-    fun getCurrentMainData(): LiveData<MainData> {
-        var res = dataSource.getCurrentMainData(44L)
-        return res
-    }
-
-    /**
      *  получает список всех секций из базы данных
      */
     fun getSections(): LiveData<List<Section>> {
@@ -82,6 +100,7 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
         return sections
     }
 
+    //-----------------------------------PERIOD PART-----------------------------------------------
     fun updatePeriodIdInSectionInDb(sectionId: Long, periodId: Long) {
         ioScopew.launch {
             dataSource.updatePeriodIdInSection(sectionId, periodId)
@@ -118,38 +137,17 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
         return result!!
     }
 
-    /**
-     * Выбранный секцию делаем записанным по умолчанию
-     */
-    fun setCurrentSection(sectionId: Long) {
+
+    fun updateCurrentPeriodNumInSectionInDb(sectionId: Long, newId : Long ) {
         ioScopew.launch {
-            setCurrentSectionDb(sectionId)
+            dataSource.updateCurrentPeriodNumInSection(sectionId, newId)
         }
     }
 
-    /**
-     * Сохраняем данные о секции в базе данных
-     */
-    private suspend fun setCurrentSectionDb(sectionId: Long) {
-        withContext(Dispatchers.IO) {
-//            val mainData = MainData(44L, sectionId)
-            dataSource.insertMainData(sectionId)
-        }
+    fun getPeriodsInSection(sectionId: Long) : LiveData<List<Period>> {
+        return dataSource.getPeriodsInSection(sectionId)
     }
-
-    fun saveMainDataValues(sectionId: Long, periodId: Long) {
-        ioScopew.launch {
-            dataSource.insertMainData(sectionId, periodId)
-        }
-    }
-
-
-    fun updateCurrSectionValue( sectionId: Long, newId : Long ) {
-        ioScopew.launch {
-            dataSource.updateCurrentPeriodNum(sectionId, newId)
-        }
-    }
-
+    //------------------------------------LESSONS PART----------------------------------------------
     fun insertLesson (lesson: Lesson) {
         ioScopew.launch{
             dataSource.insertLesson(lesson)

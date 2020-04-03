@@ -102,7 +102,7 @@ class SectionFragment : Fragment() {
         // навигация в календарь
         viewModel.navToCalendar.observe(viewLifecycleOwner, Observer {
             if (it != null) {
-                val action = SectionFragmentDirections.actionNavSectionToNavCalendar()
+                val action = SectionFragmentDirections.actionNavSectionToNavCalendar(it)
                 this.findNavController().navigate(action)
 
                 viewModel.navToCalendarfinish()

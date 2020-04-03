@@ -66,7 +66,7 @@ class SectionViewModel (val dataSource : LessonsDatabaseDao,
 
         lessonslive.removeSource(currentLessonsListner!!)
 
-        repository.updateCurrSectionValue(sectionId, newPeriod)
+        repository.updateCurrentPeriodNumInSectionInDb(sectionId, newPeriod)
 
         insertNewPeriodLessons(sectionId, lessons, newPeriod)
 
@@ -94,7 +94,13 @@ class SectionViewModel (val dataSource : LessonsDatabaseDao,
             val periodId = repository.insertNewPeriod(period)
 
             repository.updatePeriodIdInSectionInDb(sectionId, periodId)
+
+            updateMainData(sectionId, periodId)
         }
+    }
+
+    private fun updateMainData(sectionId: Long, periodId: Long) {
+        repository.saveMainDataValues(sectionId, periodId)
     }
 
     /**
@@ -116,7 +122,7 @@ class SectionViewModel (val dataSource : LessonsDatabaseDao,
      *
      */
     fun navToCalendar() {
-        _navToCalendar.value = 1
+        _navToCalendar.value = sectionId
     }
 
     /**

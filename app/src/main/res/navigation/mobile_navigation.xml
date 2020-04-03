@@ -58,6 +58,9 @@
         tools:layout="@layout/calendar_fragment">
 
 
+        <argument
+            android:name="sectionIdToOpen"
+            app:argType="long" />
     </fragment>
 
 
