@@ -12,15 +12,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <CalendarView
-            android:id="@+id/calendar_view"
+<!--        <CalendarView-->
+<!--            android:id="@+id/calendar_view"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content" />-->
+        <com.applandeo.materialcalendarview.CalendarView
+            android:id="@+id/material_calendar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="400dp"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="period"/>
+            android:text="period"
+            android:layout_gravity="center"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/periods_recycle_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            />
 
 
     </LinearLayout>

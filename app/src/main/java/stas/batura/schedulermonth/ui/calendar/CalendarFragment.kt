@@ -9,20 +9,24 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.applandeo.materialcalendarview.EventDay
 import kotlinx.android.synthetic.main.calendar_fragment.*
 import stas.batura.schedulermonth.R
 import stas.batura.schedulermonth.databinding.CalendarFragmentBinding
-import stas.batura.schedulermonth.databinding.CreateSectionFragmentBinding
 import stas.batura.schedulermonth.repository.room.LessonsDatabase
-import stas.batura.schedulermonth.ui.create.CreateSectionViewModel
-import stas.batura.schedulermonth.ui.create.CreateSectionViewModelFactory
-import stas.batura.schedulermonth.ui.create.SectionCreateFragmnetDirections
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
+
 
 class CalendarFragment : Fragment() {
 
     lateinit var viewModel: CalendarFragmentViewModel
+
+    lateinit var viewManager : RecyclerView.LayoutManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,18 +48,54 @@ class CalendarFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(CalendarFragmentViewModel::class.java)
 
-
         return bindings.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.lessonsList.observe(viewLifecycleOwner, Observer {
+//        val events: MutableList<EventDay> = ArrayList()
+//
+//        val calendar = Calendar.getInstance()
+//        events.add(EventDay(calendar, R.drawable.ic_arrow_right))
+//        material_calendar.setEvents(events)
 
+        val calendars: MutableList<Calendar> = ArrayList()
+        var calen = Calendar.getInstance()
+        calen.set(2020,4,10)
+
+        material_calendar.setDate(calen)
+
+        calendars.add(calen)
+        material_calendar.setHighlightedDays(calendars)
+
+        // наблюдаем за списком уроков
+        viewModel.lessonsList.observe(viewLifecycleOwner, Observer {
+            for (l in it) {
+                val set : MutableSet<Long> = HashSet<Long>();
+                set.add(System.currentTimeMillis() + 30*60*60*1000)
+                set.add(System.currentTimeMillis() + 80*60*60*1000)
+                //Define colors
+                //Define colors
+
+            }
             print("lessons loading")
         })
 
+        // наблюдаем за списком периодов
+        viewModel.periodList.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                val adapter = PeriodsCalendarAdapter(it, viewModel)
+                periods_recycle_view.adapter = adapter
+            }
+        })
+
+        viewManager = LinearLayoutManager(parentFragment!!.requireContext())
+        periods_recycle_view.apply {
+            layoutManager = viewManager
+        }
+
+        // наблюдаем за изменением основной даты
         viewModel.mainData.observe(viewLifecycleOwner, Observer {
 
             print("main")

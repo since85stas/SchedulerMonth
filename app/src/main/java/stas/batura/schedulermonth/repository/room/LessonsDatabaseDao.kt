@@ -29,6 +29,10 @@ abstract class LessonsDatabaseDao {
         insertMainDataDb(mainData)
     }
 
+    @Query ("UPDATE main_table SET current_period_id = :periodId")
+    abstract suspend fun updateMainPeriodId (periodId: Long)
+
+
     //--------------------------------SECTION PART-------------------------------------------------
     @Insert
     abstract fun insertSection(section: Section) : Long

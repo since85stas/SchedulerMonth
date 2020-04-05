@@ -58,6 +58,12 @@ class Repository(private val dataSource: LessonsDatabaseDao) {
         }
     }
 
+    fun saveMainDataPeriod(periodId: Long) {
+        ioScopew.launch {
+            dataSource.updateMainPeriodId(periodId)
+        }
+    }
+
     //-----------------------------SECTION PART-------------------------------------------------
     /**
      * сохраняем новую секцию и получаем ее номер
